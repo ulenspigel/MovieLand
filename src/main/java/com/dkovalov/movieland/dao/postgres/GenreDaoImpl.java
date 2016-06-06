@@ -15,8 +15,8 @@ public class GenreDaoImpl implements GenreDao {
     //TODO: inject value
     //TODO: binded variables
     //TODO: consider using batch operation
-    private static final String INSERT_GENRE_SQL = "insert into ml.genre(genre_name) values (?)";
-    private static final String LOOKUP_GENRE_SQL = "select * from ml.genre where genre_name = ?";
+    private static final String INSERT_GENRE_SQL = "insert into ml.t_genre(genre_name) values (?)";
+    private static final String LOOKUP_GENRE_SQL = "select * from ml.t_genre where genre_name = ?";
 
     @Override
     public void addGenre(Genre genre) {

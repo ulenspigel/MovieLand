@@ -22,7 +22,7 @@
         <property name="password" value="173078"/>
     </bean>
 
-    <bean id="genreService" class="com.dkovalov.movieland.dataimport.service.GenreService" />
-    <bean id="userService" class="com.dkovalov.movieland.dataimport.service.UserService" />
+    <bean id="genreService" class="com.dkovalov.movieland.service.GenreService" />
+    <bean id="userService" class="com.dkovalov.movieland.service.UserService" />
 
 </beans>

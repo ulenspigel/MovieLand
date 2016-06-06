@@ -1,6 +1,6 @@
 package com.dkovalov.movieland.dataimport;
 
-import com.dkovalov.movieland.dataimport.service.DataLoader;
+import com.dkovalov.movieland.service.DataLoader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -26,11 +26,25 @@ public class DataImport {
         }
 
         ApplicationContext context = new ClassPathXmlApplicationContext("spring/root-context.xml");
-        for (File dataFile : dataDirectory.listFiles((item, name) -> name.toLowerCase().endsWith(DATA_FILE_EXTENSION))) {
-            DataLoader loader = (DataLoader) context.getBean(dataFile.getName().replace(DATA_FILE_EXTENSION, "") + "Service");
-            try (BufferedReader reader = new BufferedReader(new FileReader(dataFile.getAbsolutePath()))) {
+        for (InitDataSource dataSource : InitDataSource.values()) {
+            DataLoader loader = (DataLoader) context.getBean(dataSource.getName() + "Service");
+            try (BufferedReader reader = new BufferedReader(new FileReader(
+                    dataDirectory.getAbsolutePath() + File.separator + dataSource.getName() + DATA_FILE_EXTENSION))) {
                 loader.loadFromFile(reader);
             }
+        }
+    }
+
+    private static enum InitDataSource {
+        USER("user"), GENRE("genre");
+        private String name;
+
+        InitDataSource(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

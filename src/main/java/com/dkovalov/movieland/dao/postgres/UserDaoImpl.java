@@ -14,7 +14,7 @@ public class UserDaoImpl implements UserDao {
     //TODO: inject value
     //TODO: binded variables
     //TODO: consider using batch operation
-    private static final String INSERT_USER_SQL = "insert into ml.user(display_name, email, login) values (?, ?, ?)";
+    private static final String INSERT_USER_SQL = "insert into ml.t_user(display_name, email, login) values (?, ?, ?)";
 
     @Override
     public void addUser(User user) {

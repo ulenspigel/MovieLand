@@ -1,4 +1,4 @@
-package com.dkovalov.movieland.dataimport.service;
+package com.dkovalov.movieland.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;

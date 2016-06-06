@@ -1,4 +1,4 @@
-package com.dkovalov.movieland.dataimport.service;
+package com.dkovalov.movieland.service;
 
 import com.dkovalov.movieland.dao.GenreDao;
 import com.dkovalov.movieland.entity.Genre;

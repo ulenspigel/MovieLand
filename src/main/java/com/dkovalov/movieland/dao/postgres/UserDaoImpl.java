@@ -4,17 +4,20 @@ import com.dkovalov.movieland.dao.UserDao;
 import com.dkovalov.movieland.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository("userDao")
 public class UserDaoImpl implements UserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //TODO: replace with autowired
-    private String insertUserSQL = "insert into ml.user(display_name, email, login) values (?, ?, ?)";
+    //TODO: inject value
+    //TODO: binded variables
+    //TODO: consider using batch operation
+    private static final String INSERT_USER_SQL = "insert into ml.user(display_name, email, login) values (?, ?, ?)";
 
+    @Override
     public void addUser(User user) {
-        jdbcTemplate.update(insertUserSQL, user.getDisplayName(), user.getEmail(), user.getLogin());
+        jdbcTemplate.update(INSERT_USER_SQL, user.getDisplayName(), user.getEmail(), user.getLogin());
     }
 }

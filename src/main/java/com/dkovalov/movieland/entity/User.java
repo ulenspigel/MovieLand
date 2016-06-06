@@ -1,18 +1,18 @@
 package com.dkovalov.movieland.entity;
 
 public class User {
-    private int userId;
+    private int id;
     private String displayName;
     private String email;
     private String login;
     private boolean isAdmin;
 
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDisplayName() {

@@ -1,0 +1,27 @@
+package com.dkovalov.movieland.dataimport.service;
+
+import com.dkovalov.movieland.dao.UserDao;
+import com.dkovalov.movieland.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+
+public class UserService implements DataLoader {
+    //TODO: move to XML
+    @Autowired
+    UserDao userDao;
+
+    @Override
+    public void loadFromFile(BufferedReader reader) throws IOException {
+        String entry = "";
+        while ((entry = reader.readLine()) != null) {
+            User user = new User();
+            user.setDisplayName(entry);
+            user.setEmail(reader.readLine());
+            user.setLogin(reader.readLine());
+            reader.readLine();
+            userDao.addUser(user);
+        }
+    }
+}

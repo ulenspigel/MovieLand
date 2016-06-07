@@ -36,7 +36,7 @@ public class DataImport {
     }
 
     private static enum InitDataSource {
-        USER("user"), GENRE("genre");
+        USER("user"), GENRE("genre"), MOVIE("movie"), REVIEW("review");
         private String name;
 
         InitDataSource(String name) {

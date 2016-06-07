@@ -10,8 +10,12 @@ public class Genre {
         this.name = name;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository("genreDao")
 public class GenreDaoImpl implements GenreDao {
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     //TODO: inject value
     //TODO: binded variables

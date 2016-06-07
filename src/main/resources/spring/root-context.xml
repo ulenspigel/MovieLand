@@ -24,5 +24,7 @@
 
     <bean id="genreService" class="com.dkovalov.movieland.service.GenreService" />
     <bean id="userService" class="com.dkovalov.movieland.service.UserService" />
+    <bean id="movieService" class="com.dkovalov.movieland.service.MovieService" />
+    <bean id="reviewService" class="com.dkovalov.movieland.service.ReviewService" />
 
 </beans>

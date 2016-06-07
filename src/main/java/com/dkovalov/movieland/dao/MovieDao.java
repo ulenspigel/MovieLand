@@ -4,4 +4,5 @@ import com.dkovalov.movieland.entity.Movie;
 
 public interface MovieDao {
     void addMovie(Movie movie);
+    Movie getByName(String name);
 }

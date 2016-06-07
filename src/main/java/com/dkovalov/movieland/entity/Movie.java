@@ -6,6 +6,7 @@ import java.util.List;
 public class Movie {
     private int id;
     private String title;
+    private String originalTitle;
     private int year;
     private String country;
     private String description;
@@ -17,12 +18,24 @@ public class Movie {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
     }
 
     public int getYear() {

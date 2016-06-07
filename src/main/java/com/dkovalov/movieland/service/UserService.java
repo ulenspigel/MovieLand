@@ -10,7 +10,7 @@ import java.io.IOException;
 public class UserService implements DataLoader {
     //TODO: move to XML
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
 
     @Override
     public void loadFromFile(BufferedReader reader) throws IOException {
@@ -19,9 +19,13 @@ public class UserService implements DataLoader {
             User user = new User();
             user.setDisplayName(entry);
             user.setEmail(reader.readLine());
-            user.setLogin(reader.readLine());
+            user.setPassword(reader.readLine());
             reader.readLine();
             userDao.addUser(user);
         }
+    }
+
+    public User findByName(String name) {
+        return userDao.getByName(name);
     }
 }

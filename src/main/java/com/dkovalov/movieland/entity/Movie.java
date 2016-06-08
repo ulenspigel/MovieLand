@@ -1,17 +1,29 @@
 package com.dkovalov.movieland.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 public class Movie {
+    @JsonIgnore
     private int id;
+    @JsonProperty("title")
     private String title;
+    @JsonProperty("originalTitle")
     private String originalTitle;
+    @JsonProperty("yearOfRelease")
     private int year;
+    @JsonIgnore
     private String country;
+    @JsonIgnore
     private String description;
+    @JsonProperty("rating")
     private BigDecimal rating;
+    @JsonIgnore
     private BigDecimal price;
+    @JsonIgnore
     private List<Genre> genres;
 
     public int getId() {

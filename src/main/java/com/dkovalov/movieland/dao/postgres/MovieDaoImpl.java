@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository("movieDao")
 public class MovieDaoImpl implements MovieDao {
@@ -25,6 +26,8 @@ public class MovieDaoImpl implements MovieDao {
             "insert into ml.t_movie(movie_title, original_title, year, country, description, rating, price) values (?, ?, ?, ?, ?, ?, ?)";
     private static final String INSERT_MOVIE_GENRE = "insert into ml.t_movie_genre(movie_id, genre_id) values (?, ?)";
     private static final String LOOKUP_MOVIE_SQL = "select * from ml.t_movie where movie_title = ?";
+    //=======
+    private static final String FETCH_ALL_MOVIES_SQL = "select * from ml.t_movie";
 
     @Override
     public void addMovie(Movie movie) {
@@ -52,5 +55,12 @@ public class MovieDaoImpl implements MovieDao {
     @Override
     public Movie getByName(String name) {
         return jdbcTemplate.queryForObject(LOOKUP_MOVIE_SQL, new Object[]{name}, new MovieRowMapper());
+    }
+
+    //===========================
+
+    @Override
+    public List<Movie> getAll() {
+        return jdbcTemplate.query(FETCH_ALL_MOVIES_SQL, new MovieRowMapper());
     }
 }

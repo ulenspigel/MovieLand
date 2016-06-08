@@ -3,6 +3,7 @@ package com.dkovalov.movieland.service;
 import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.entity.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +11,9 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
+import java.util.List;
 
+@Service
 public class MovieService implements DataLoader {
     private static final String RATING_TITLE = "rating:";
     private static final String PRICE_TITLE = "price:";
@@ -47,5 +50,9 @@ public class MovieService implements DataLoader {
 
     public Movie findByName(String name) {
         return movieDao.getByName(name);
+    }
+
+    public List<Movie> getAll() {
+        return movieDao.getAll();
     }
 }

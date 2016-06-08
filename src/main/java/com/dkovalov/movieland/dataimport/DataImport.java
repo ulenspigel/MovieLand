@@ -1,13 +1,12 @@
 package com.dkovalov.movieland.dataimport;
 
-import com.dkovalov.movieland.service.DataLoader;
+import com.dkovalov.movieland.entity.Movie;
+import com.dkovalov.movieland.service.MovieService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 //TODO: add logging routine
 //TODO: test coverage
@@ -16,7 +15,7 @@ public class DataImport {
     public static final String DATA_FILE_EXTENSION = ".txt";
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
+        /*if (args.length != 1) {
             throw new RuntimeException("Parameter containing path to a directory with data files is expected.");
         }
 
@@ -32,7 +31,10 @@ public class DataImport {
                     dataDirectory.getAbsolutePath() + File.separator + dataSource.getName() + DATA_FILE_EXTENSION))) {
                 loader.loadFromFile(reader);
             }
-        }
+        }*/
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring/root-context.xml");
+        MovieService service = (MovieService) context.getBean("movieService");
+        List<Movie> movies =  service.getAll();
     }
 
     private static enum InitDataSource {

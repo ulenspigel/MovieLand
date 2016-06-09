@@ -5,18 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
-public class Genre {
+public class Country {
     @JsonIgnore
-    private int id;
-    @JsonProperty("genre")
-    @JsonView(JsonDisplayScheme.MovieConcise.class)
-    private String name;
-
-    public Genre() {}
-
-    public Genre(String name) {
-        this.name = name;
-    }
+    int id;
+    @JsonProperty("country")
+    @JsonView(JsonDisplayScheme.MovieFull.class)
+    String name;
 
     public int getId() {
         return id;

@@ -1,28 +1,40 @@
 package com.dkovalov.movieland.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
+import static com.dkovalov.movieland.util.JsonDisplayScheme.*;
 
+@JsonPropertyOrder({"title","originalTitle","yearOfRelease","countries","genres","description","reviews","rating"})
 public class Movie {
     @JsonIgnore
     private int id;
     @JsonProperty("title")
+    @JsonView(MovieConcise.class)
     private String title;
     @JsonProperty("originalTitle")
+    @JsonView(MovieConcise.class)
     private String originalTitle;
     @JsonProperty("yearOfRelease")
+    @JsonView(MovieConcise.class)
     private int year;
-    @JsonIgnore
+    @JsonProperty("description")
+    @JsonView(MovieFull.class)
     private String description;
     @JsonProperty("rating")
+    @JsonView(MovieConcise.class)
     private BigDecimal rating;
     @JsonIgnore
     private BigDecimal price;
     @JsonProperty("genres")
+    @JsonView(MovieConcise.class)
     private List<Genre> genres;
+    @JsonProperty("countries")
+    @JsonView(MovieFull.class)
+    private List<Country> countries;
+    @JsonProperty("reviews")
+    @JsonView(MovieFull.class)
+    private List<Review> reviews;
 
     public int getId() {
         return id;
@@ -86,5 +98,21 @@ public class Movie {
 
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
+    }
+
+    public List<Country> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(List<Country> countries) {
+        this.countries = countries;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

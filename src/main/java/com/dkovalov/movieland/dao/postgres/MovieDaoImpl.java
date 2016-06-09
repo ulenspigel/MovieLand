@@ -16,33 +16,29 @@ import java.util.List;
 @Repository("movieDao")
 public class MovieDaoImpl implements MovieDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private final MovieRowMapper movieRowMapper = new MovieRowMapper();
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private MovieRowMapper moviewRowMapper;
-    @Autowired
-    private GenreRowMapper genreRowMapper;
     @Value("${sql.movie.all}")
     private String fetchAllSQL;
-    @Value("${sql.movie.genres}")
-    private String fetchGenresSQL;
+    @Value("${sql.movie.byId}")
+    private String fetchByIdSQL;
 
     @Override
     public List<Movie> getAll() {
         log.info("Start querying movies");
         long startTime = System.currentTimeMillis();
-        List<Movie> movies = jdbcTemplate.query(fetchAllSQL, moviewRowMapper);
+        List<Movie> movies = jdbcTemplate.query(fetchAllSQL, movieRowMapper);
         log.info("Finish querying movies. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
         return movies;
     }
 
     @Override
-    public List<Genre> getMovieGenres(int movieId) {
-        log.info("Start fetching genres for movie with ID = {}", movieId);
+    public Movie getById(int id) {
+        log.info("Start querying movie with ID = {}", id);
         long startTime = System.currentTimeMillis();
-        List<Genre> genres = jdbcTemplate.query(fetchGenresSQL, new Object[]{movieId}, genreRowMapper);
-        log.info("Finish fetching genres for movie with ID = {}. Elapsed time - {} ms", movieId,
-                System.currentTimeMillis() - startTime);
-        return genres;
+        Movie movie = jdbcTemplate.queryForObject(fetchByIdSQL, new Object[]{id}, movieRowMapper);
+        log.info("Finish querying movie with ID = {}. Elapsed time - {} ms", id, System.currentTimeMillis() - startTime);
+        return movie;
     }
 }

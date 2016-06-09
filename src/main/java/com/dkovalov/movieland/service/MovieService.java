@@ -14,4 +14,12 @@ public class MovieService {
     public List<Movie> getAll() {
         return movieDao.getAll();
     }
+
+    public void populateGenres(Movie movie) {
+        movie.setGenres(movieDao.getMovieGenres(movie.getId()));
+    }
+
+    public void populateGenres(List<Movie> movies) {
+        movies.forEach((movie) -> populateGenres(movie));
+    }
 }

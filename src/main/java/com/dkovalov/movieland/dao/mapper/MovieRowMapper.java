@@ -1,16 +1,13 @@
 package com.dkovalov.movieland.dao.mapper;
 
-import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.entity.Movie;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Service
 public class MovieRowMapper implements RowMapper<Movie> {
-    @Autowired
-    MovieDao movieDao;
-
     @Override
     public Movie mapRow(ResultSet resultSet, int i) throws SQLException {
         Movie movie = new Movie();
@@ -21,7 +18,6 @@ public class MovieRowMapper implements RowMapper<Movie> {
         movie.setDescription(resultSet.getString("description"));
         movie.setRating(resultSet.getBigDecimal("rating"));
         movie.setPrice(resultSet.getBigDecimal("price"));
-        movie.setGenres(movieDao.getMovieGenres(movie.getId()));
         return movie;
     }
 }

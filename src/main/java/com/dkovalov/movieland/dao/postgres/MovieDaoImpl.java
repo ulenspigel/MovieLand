@@ -18,6 +18,10 @@ public class MovieDaoImpl implements MovieDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private MovieRowMapper moviewRowMapper;
+    @Autowired
+    private GenreRowMapper genreRowMapper;
     @Value("${sql.movie.all}")
     private String fetchAllSQL;
     @Value("${sql.movie.genres}")
@@ -27,7 +31,7 @@ public class MovieDaoImpl implements MovieDao {
     public List<Movie> getAll() {
         log.info("Start querying movies");
         long startTime = System.currentTimeMillis();
-        List<Movie> movies = jdbcTemplate.query(fetchAllSQL, new MovieRowMapper());
+        List<Movie> movies = jdbcTemplate.query(fetchAllSQL, moviewRowMapper);
         log.info("Finish querying movies. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
         return movies;
     }
@@ -36,7 +40,7 @@ public class MovieDaoImpl implements MovieDao {
     public List<Genre> getMovieGenres(int movieId) {
         log.info("Start fetching genres for movie with ID = {}", movieId);
         long startTime = System.currentTimeMillis();
-        List<Genre> genres = jdbcTemplate.query(fetchGenresSQL, new Object[]{movieId}, new GenreRowMapper());
+        List<Genre> genres = jdbcTemplate.query(fetchGenresSQL, new Object[]{movieId}, genreRowMapper);
         log.info("Finish fetching genres for movie with ID = {}. Elapsed time - {} ms", movieId,
                 System.currentTimeMillis() - startTime);
         return genres;

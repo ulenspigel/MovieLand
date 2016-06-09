@@ -24,6 +24,7 @@ public class MovieController {
         log.info("Received request for getting all movies");
         long startTime = System.currentTimeMillis();
         List<Movie> movies = movieService.getAll();
+        movieService.populateGenres(movies);
         log.info("List of {} elements containing all movies is received. Time elapsed - {} ms", movies.size(),
                 System.currentTimeMillis() - startTime);
         return movies;

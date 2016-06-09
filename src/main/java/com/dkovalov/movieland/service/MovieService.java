@@ -20,8 +20,19 @@ public class MovieService {
     @Autowired
     private ReviewDao reviewDao;
 
-    public List<Movie> getAll() {
-        return movieDao.getAll();
+    private void validateSortOrder(String sortOrder) {
+        try {
+            SortOrder.valueOf(sortOrder);
+        } catch (NullPointerException npe) {
+        } catch (IllegalArgumentException iae) {
+            throw new IllegalArgumentException("Unsupported sort order: " + sortOrder);
+        }
+    }
+
+    public List<Movie> getAll(String ratingOrder, String priceOrder) {
+        validateSortOrder(ratingOrder);
+        validateSortOrder(priceOrder);
+        return movieDao.getAll(ratingOrder, priceOrder);
     }
 
     public Movie getById(int id) {
@@ -42,5 +53,9 @@ public class MovieService {
 
     public void populateReviews(Movie movie) {
         movie.setReviews(reviewDao.getForMovie(movie.getId()));
+    }
+
+    private static enum SortOrder {
+        asc, desc
     }
 }

@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,10 +22,11 @@ public class MovieController {
     @JsonView(JsonDisplayScheme.MovieConcise.class)
     @RequestMapping(value = "movies", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public List<Movie> getAll() {
+    public List<Movie> getAll(@RequestParam(required = false) String rating,
+                              @RequestParam(required = false) String price) {
         log.info("Received request for getting all movies");
         long startTime = System.currentTimeMillis();
-        List<Movie> movies = movieService.getAll();
+        List<Movie> movies = movieService.getAll(rating, price);
         movieService.populateGenres(movies);
         log.info("List of {} elements containing all movies is fetched. Elapsed time - {} ms", movies.size(),
                 System.currentTimeMillis() - startTime);

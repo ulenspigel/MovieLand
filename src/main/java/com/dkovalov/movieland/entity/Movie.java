@@ -9,29 +9,38 @@ import static com.dkovalov.movieland.util.JsonDisplayScheme.*;
 public class Movie {
     @JsonIgnore
     private int id;
+
     @JsonProperty("title")
     @JsonView(MovieConcise.class)
     private String title;
+
     @JsonProperty("originalTitle")
     @JsonView(MovieConcise.class)
     private String originalTitle;
+
     @JsonProperty("yearOfRelease")
     @JsonView(MovieConcise.class)
     private int year;
+
     @JsonProperty("description")
     @JsonView(MovieFull.class)
     private String description;
+
     @JsonProperty("rating")
     @JsonView(MovieConcise.class)
     private BigDecimal rating;
+
     @JsonIgnore
     private BigDecimal price;
+
     @JsonProperty("genres")
     @JsonView(MovieConcise.class)
     private List<Genre> genres;
+
     @JsonProperty("countries")
     @JsonView(MovieFull.class)
     private List<Country> countries;
+
     @JsonProperty("reviews")
     @JsonView(MovieFull.class)
     private List<Review> reviews;
@@ -114,5 +123,21 @@ public class Movie {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", year=" + year +
+                ", description='" + description + '\'' +
+                ", rating=" + rating +
+                ", price=" + price +
+                ", genres=" + genres +
+                ", countries=" + countries +
+                ", reviews=" + reviews +
+                '}';
     }
 }

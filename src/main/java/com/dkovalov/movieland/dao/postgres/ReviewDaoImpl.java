@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository("reviewDao")
+@Repository
 public class ReviewDaoImpl implements ReviewDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class Genre {
     @JsonIgnore
     private int id;
+
     @JsonProperty("genre")
     @JsonView(JsonDisplayScheme.MovieConcise.class)
     private String name;
@@ -32,5 +33,13 @@ public class Genre {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Genre{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

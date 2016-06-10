@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class Country {
     @JsonIgnore
     int id;
+
     @JsonProperty("country")
     @JsonView(JsonDisplayScheme.MovieFull.class)
     String name;
@@ -26,5 +27,13 @@ public class Country {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Country{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

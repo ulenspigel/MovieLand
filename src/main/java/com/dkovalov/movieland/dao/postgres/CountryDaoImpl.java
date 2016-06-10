@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
-@Repository("countryDao")
+@Repository
 public class CountryDaoImpl implements CountryDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired

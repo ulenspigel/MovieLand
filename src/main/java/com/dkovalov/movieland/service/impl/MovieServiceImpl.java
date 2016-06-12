@@ -2,6 +2,7 @@ package com.dkovalov.movieland.service.impl;
 
 import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.entity.Movie;
+import com.dkovalov.movieland.entity.MovieRequest;
 import com.dkovalov.movieland.service.CountryService;
 import com.dkovalov.movieland.service.GenreService;
 import com.dkovalov.movieland.service.MovieService;
@@ -30,6 +31,11 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie getById(int id) {
         return movieDao.getById(id);
+    }
+
+    @Override
+    public List<Movie> search(MovieRequest request) {
+        return movieDao.search(request);
     }
 
     @Override

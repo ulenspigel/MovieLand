@@ -1,15 +1,19 @@
 package com.dkovalov.movieland.controller;
 
+import com.dkovalov.movieland.controller.error.IncorrectJsonRequest;
 import com.dkovalov.movieland.entity.Movie;
+import com.dkovalov.movieland.entity.MovieRequest;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.util.JsonDisplayScheme;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -45,5 +49,23 @@ public class MovieController {
         movieService.populateReviews(movie);
         log.info("Movie with ID = {} is fetched. Elapsed time - {} ms", movieId, System.currentTimeMillis() - startTime);
         return movie;
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public List<Movie> search(@RequestBody String requestJson) throws IncorrectJsonRequest {
+        log.info("Received request for movies search: {}", requestJson);
+        long startTime = System.currentTimeMillis();
+        List<Movie> movies;
+        try {
+            MovieRequest movieRequest = new ObjectMapper().readValue(requestJson, MovieRequest.class);
+            log.debug("Request has been deserialized into {}", movieRequest);
+            movies = movieService.search(movieRequest);
+        } catch (IOException ioe) {
+            throw new IncorrectJsonRequest();
+        }
+        // TODO: null-pointer
+        log.info("List of {} movies is fetched. Elapsed time - {} ms", movies.size(), System.currentTimeMillis() - startTime);
+        return movies;
     }
 }

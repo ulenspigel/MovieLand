@@ -1,11 +1,11 @@
 package com.dkovalov.movieland.service.impl;
 
+import com.dkovalov.movieland.cache.GenreCache;
 import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.entity.MovieRequest;
 import com.dkovalov.movieland.service.CountryService;
-import com.dkovalov.movieland.service.GenreService;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieDao movieDao;
     @Autowired
-    private GenreService genreService;
+    private GenreCache genreCache;
     @Autowired
     private CountryService countryService;
     @Autowired
@@ -56,7 +56,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void populateGenres(Movie movie) {
-        movie.setGenres(genreService.getForMovie(movie.getId()));
+        movie.setGenres(genreCache.getForMovie(movie.getId()));
     }
 
     @Override

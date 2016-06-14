@@ -47,7 +47,6 @@ public class QueryBuilder {
         return orderClause;
     }
 
-    // TODO: cover with test
     public String getMoviesFilterPredicate(MovieRequest request) {
         String whereClause = "";
         if (request.getTitle() != null) {
@@ -68,7 +67,6 @@ public class QueryBuilder {
         return whereClause;
     }
 
-    // TODO: cover with test
     public Object[] getMoviesFilterParams(MovieRequest request) {
         List<Object> params = new ArrayList<>();
         if (request.getTitle() != null) {
@@ -86,8 +84,7 @@ public class QueryBuilder {
         return params.toArray();
     }
 
-    // TODO: cover with test
-    private void validateSortOrder(String order) {
+    void validateSortOrder(String order) {
         if (!validOrders.contains(order)) {
             log.error("Unsupported sort operation {}", order);
             throw new IllegalArgumentException("Unsupported sort operation: " + order);

@@ -1,21 +1,16 @@
 package com.dkovalov.movieland.controller;
 
-import com.dkovalov.movieland.controller.error.IncorrectJsonRequest;
-import com.dkovalov.movieland.controller.error.ResourceNotFound;
-import com.dkovalov.movieland.deserializer.MovieRequestDeserializer;
+import com.dkovalov.movieland.deserializer.impl.MovieRequestDeserializerImpl;
 import com.dkovalov.movieland.entity.Movie;
-import com.dkovalov.movieland.entity.MovieRequest;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.util.JsonDisplayScheme;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -25,7 +20,7 @@ public class MovieController {
     @Autowired
     MovieService movieService;
     @Autowired
-    MovieRequestDeserializer deserializer;
+    MovieRequestDeserializerImpl deserializer;
 
     @JsonView(JsonDisplayScheme.MovieConcise.class)
     @RequestMapping(value = "movies", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")

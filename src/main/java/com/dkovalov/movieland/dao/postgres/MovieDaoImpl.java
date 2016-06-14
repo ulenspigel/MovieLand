@@ -35,8 +35,9 @@ public class MovieDaoImpl implements MovieDao {
     public List<Movie> getAll(String ratingOrder, String priceOrder) {
         log.info("Start querying movies");
         long startTime = System.currentTimeMillis();
-        List<Movie> movies = jdbcTemplate.query(fetchAllSQL + queryBuilder.getMoviesOrderClause(ratingOrder, priceOrder),
-                movieRowMapper);
+        String query = fetchAllSQL + queryBuilder.getMoviesOrderClause(ratingOrder, priceOrder);
+        log.debug("Using query {}", query);
+        List<Movie> movies = jdbcTemplate.query(query, movieRowMapper);
         log.info("Finish querying movies. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
         return movies;
     }
@@ -45,6 +46,7 @@ public class MovieDaoImpl implements MovieDao {
     public Movie getById(int id) {
         log.info("Start querying movie with ID = {}", id);
         long startTime = System.currentTimeMillis();
+        log.debug("Using query {}", fetchByIdSQL);
         Movie movie = jdbcTemplate.queryForObject(fetchByIdSQL, new Object[]{id}, movieRowMapper);
         log.info("Finish querying movie with ID = {}. Elapsed time - {} ms", id, System.currentTimeMillis() - startTime);
         return movie;
@@ -54,11 +56,11 @@ public class MovieDaoImpl implements MovieDao {
     public List<Movie> search(MovieRequest request) {
         log.info("Start querying movies satisfying search request {}" + request);
         long startTime = System.currentTimeMillis();
-        String whereClause = "";
-        Object[] params = null;
-        queryBuilder.getMoviesFilterPredicate(request, whereClause, params);
-        List<Movie> movies = jdbcTemplate.query(fetchAllSQL + whereClause, params, movieRowMapper);
+        String query = fetchAllSQL + queryBuilder.getMoviesFilterPredicate(request);
+        Object[] params = queryBuilder.getMoviesFilterParams(request);
+        log.debug("Using query {} with params {}", query, params);
+        List<Movie> movies = jdbcTemplate.query(query, params, movieRowMapper);
         log.info("Finis querying movies. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
-        return null;
+        return movies;
     }
 }

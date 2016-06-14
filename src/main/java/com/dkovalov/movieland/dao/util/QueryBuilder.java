@@ -18,7 +18,7 @@ public class QueryBuilder {
     private static final String WHERE_CLAUSE = "where";
     private static final String RATING_COLUMN_NAME = ",rating ";
     private static final String PRICE_COLUMN_NAME = ",price ";
-    private static final String TITLE_PREDICATE = " and title = ?";
+    private static final String TITLE_PREDICATE = " and movie_title = ?";
     private static final String YEAR_PREDICATE = " and year = ?";
     private final Set<String> validOrders = new HashSet<String>() {{
         add("asc");
@@ -48,31 +48,45 @@ public class QueryBuilder {
     }
 
     // TODO: cover with test
-    public void getMoviesFilterPredicate(MovieRequest request, String whereClause, Object[] params) {
-        whereClause = "";
-        List<Object> paramList = new ArrayList<>();
+    public String getMoviesFilterPredicate(MovieRequest request) {
+        String whereClause = "";
         if (request.getTitle() != null) {
             whereClause += TITLE_PREDICATE;
-            paramList.add(request.getTitle());
         }
         if (request.getYear() != null) {
             whereClause += YEAR_PREDICATE;
-            paramList.add(request.getYear());
         }
         if (request.getGenre() != null) {
             whereClause += " and " + genreSubRequest;
-            paramList.add(request.getGenre());
         }
         if (request.getCountry() != null) {
             whereClause += " and " + countrySubRequest;
-            paramList.add(request.getCountry());
         }
         if (!"".equals(whereClause)) {
-            whereClause.replaceFirst("and", WHERE_CLAUSE);
-            params = paramList.toArray();
+            whereClause = whereClause.replaceFirst("(and)", WHERE_CLAUSE);
         }
+        return whereClause;
     }
 
+    // TODO: cover with test
+    public Object[] getMoviesFilterParams(MovieRequest request) {
+        List<Object> params = new ArrayList<>();
+        if (request.getTitle() != null) {
+            params.add(request.getTitle());
+        }
+        if (request.getYear() != null) {
+            params.add(request.getYear());
+        }
+        if (request.getGenre() != null) {
+            params.add(request.getGenre());
+        }
+        if (request.getCountry() != null) {
+            params.add(request.getCountry());
+        }
+        return params.toArray();
+    }
+
+    // TODO: cover with test
     private void validateSortOrder(String order) {
         if (!validOrders.contains(order)) {
             log.error("Unsupported sort operation {}", order);

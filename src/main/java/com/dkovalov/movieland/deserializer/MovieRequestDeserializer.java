@@ -1,35 +1,34 @@
 package com.dkovalov.movieland.deserializer;
 
+import com.dkovalov.movieland.controller.error.IncorrectJsonRequest;
 import com.dkovalov.movieland.entity.MovieRequest;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-public class MovieRequestDeserializer extends JsonDeserializer<MovieRequest> {
-    private static final String TITLE_PROPERTY = "title";
-    private static final String YEAR_PROPERTY = "year_of_release";
-    private static final String COUNTRY_PROPERTY = "country";
-    private static final String GENRE_PROPERTY = "genre";
+@Service
+public class MovieRequestDeserializer {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private ObjectMapper mapper = new ObjectMapper();
 
-    @Override
-    public MovieRequest deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        MovieRequest MovieRequest = new MovieRequest();
-        if (node.hasNonNull(TITLE_PROPERTY)) {
-            MovieRequest.setTitle(node.get(TITLE_PROPERTY).asText());
+    // TODO: cover with test
+    public MovieRequest searchRequest(String json) {
+        log.info("Start parsing movie search request {}", json);
+        long startTime = System.currentTimeMillis();
+        MovieRequest request = parseJson(json, MovieRequest.class);
+        log.debug("Deserialized object is {}", request);
+        log.info("Request has been parsed. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+        return request;
+    }
+
+    private <T> T parseJson(String json, Class<T> clazz) throws IncorrectJsonRequest {
+        try {
+            return mapper.readValue(json, clazz);
+        } catch (IOException ioe) {
+            throw new IncorrectJsonRequest();
         }
-        if (node.hasNonNull(YEAR_PROPERTY) && node.get(YEAR_PROPERTY).isInt()) {
-            MovieRequest.setYear(node.get(YEAR_PROPERTY).asInt());
-        }
-        if (node.hasNonNull(COUNTRY_PROPERTY)) {
-            MovieRequest.setCountry(node.get(COUNTRY_PROPERTY).asText());
-        }
-        if (node.hasNonNull(GENRE_PROPERTY)) {
-            MovieRequest.setGenre(node.get(GENRE_PROPERTY).asText());
-        }
-        return MovieRequest;
     }
 }

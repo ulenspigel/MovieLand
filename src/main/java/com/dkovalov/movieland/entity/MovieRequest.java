@@ -1,9 +1,5 @@
 package com.dkovalov.movieland.entity;
 
-import com.dkovalov.movieland.deserializer.MovieRequestDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-@JsonDeserialize(using = MovieRequestDeserializer.class)
 public class MovieRequest {
     private String genre;
     private String title;

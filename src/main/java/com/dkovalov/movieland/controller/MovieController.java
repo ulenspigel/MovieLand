@@ -1,6 +1,8 @@
 package com.dkovalov.movieland.controller;
 
 import com.dkovalov.movieland.controller.error.IncorrectJsonRequest;
+import com.dkovalov.movieland.controller.error.ResourceNotFound;
+import com.dkovalov.movieland.deserializer.MovieRequestDeserializer;
 import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.entity.MovieRequest;
 import com.dkovalov.movieland.service.MovieService;
@@ -22,6 +24,8 @@ public class MovieController {
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     MovieService movieService;
+    @Autowired
+    MovieRequestDeserializer deserializer;
 
     @JsonView(JsonDisplayScheme.MovieConcise.class)
     @RequestMapping(value = "movies", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
@@ -51,20 +55,13 @@ public class MovieController {
         return movie;
     }
 
+    @JsonView(JsonDisplayScheme.MovieConcise.class)
     @RequestMapping(value = "search", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public List<Movie> search(@RequestBody String requestJson) throws IncorrectJsonRequest {
-        log.info("Received request for movies search: {}", requestJson);
+    public List<Movie> search(@RequestBody String json) {
+        log.info("Received request for movies search: {}", json);
         long startTime = System.currentTimeMillis();
-        List<Movie> movies;
-        try {
-            MovieRequest movieRequest = new ObjectMapper().readValue(requestJson, MovieRequest.class);
-            log.debug("Request has been deserialized into {}", movieRequest);
-            movies = movieService.search(movieRequest);
-        } catch (IOException ioe) {
-            throw new IncorrectJsonRequest();
-        }
-        // TODO: null-pointer
+        List<Movie> movies = movieService.search(deserializer.searchRequest(json));
         log.info("List of {} movies is fetched. Elapsed time - {} ms", movies.size(), System.currentTimeMillis() - startTime);
         return movies;
     }

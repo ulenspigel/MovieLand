@@ -53,10 +53,10 @@ public class MovieController {
     @JsonView(JsonDisplayScheme.MovieConcise.class)
     @RequestMapping(value = "search", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public List<Movie> search(@RequestBody String json) {
-        log.info("Received request for movies search: {}", json);
+    public List<Movie> search(@RequestBody String request) {
+        log.info("Received request for movies search: {}", request);
         long startTime = System.currentTimeMillis();
-        List<Movie> movies = movieService.search(deserializer.searchRequest(json));
+        List<Movie> movies = movieService.search(deserializer.searchRequest(request));
         log.info("List of {} movies is fetched. Elapsed time - {} ms", movies.size(), System.currentTimeMillis() - startTime);
         return movies;
     }

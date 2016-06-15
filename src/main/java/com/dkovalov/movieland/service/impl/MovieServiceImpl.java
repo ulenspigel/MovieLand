@@ -4,7 +4,7 @@ import com.dkovalov.movieland.cache.GenreCache;
 import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.entity.Movie;
-import com.dkovalov.movieland.entity.MovieRequest;
+import com.dkovalov.movieland.dto.MovieRequest;
 import com.dkovalov.movieland.service.CountryService;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.service.ReviewService;

@@ -2,7 +2,7 @@ package com.dkovalov.movieland.service.impl;
 
 import com.dkovalov.movieland.dao.GenreDao;
 import com.dkovalov.movieland.entity.Genre;
-import com.dkovalov.movieland.entity.MovieGenre;
+import com.dkovalov.movieland.dto.MovieGenre;
 import com.dkovalov.movieland.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

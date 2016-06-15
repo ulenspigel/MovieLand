@@ -1,6 +1,6 @@
 package com.dkovalov.movieland.dao.mapper;
 
-import com.dkovalov.movieland.entity.MovieGenre;
+import com.dkovalov.movieland.dto.MovieGenre;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;

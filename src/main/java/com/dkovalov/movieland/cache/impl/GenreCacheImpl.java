@@ -2,7 +2,7 @@ package com.dkovalov.movieland.cache.impl;
 
 import com.dkovalov.movieland.cache.GenreCache;
 import com.dkovalov.movieland.entity.Genre;
-import com.dkovalov.movieland.entity.MovieGenre;
+import com.dkovalov.movieland.dto.MovieGenre;
 import com.dkovalov.movieland.service.GenreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

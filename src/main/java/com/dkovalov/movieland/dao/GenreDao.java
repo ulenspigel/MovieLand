@@ -1,7 +1,7 @@
 package com.dkovalov.movieland.dao;
 
 import com.dkovalov.movieland.entity.Genre;
-import com.dkovalov.movieland.entity.MovieGenre;
+import com.dkovalov.movieland.dto.MovieGenre;
 
 import java.util.List;
 

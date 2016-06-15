@@ -1,8 +1,7 @@
 package com.dkovalov.movieland.service;
 
-import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.entity.Movie;
-import com.dkovalov.movieland.entity.MovieRequest;
+import com.dkovalov.movieland.dto.MovieRequest;
 
 import java.util.List;
 

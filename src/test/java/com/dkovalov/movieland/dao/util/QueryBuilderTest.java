@@ -1,6 +1,6 @@
 package com.dkovalov.movieland.dao.util;
 
-import com.dkovalov.movieland.entity.MovieRequest;
+import com.dkovalov.movieland.dto.MovieRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

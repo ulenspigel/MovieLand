@@ -1,4 +1,6 @@
-package com.dkovalov.movieland.entity;
+package com.dkovalov.movieland.dto;
+
+import com.dkovalov.movieland.entity.Genre;
 
 public class MovieGenre {
     int movieId;

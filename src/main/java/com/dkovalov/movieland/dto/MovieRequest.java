@@ -1,4 +1,4 @@
-package com.dkovalov.movieland.entity;
+package com.dkovalov.movieland.dto;
 
 public class MovieRequest {
     private String genre;

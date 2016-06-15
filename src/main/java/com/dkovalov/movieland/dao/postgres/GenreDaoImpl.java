@@ -4,7 +4,7 @@ import com.dkovalov.movieland.dao.GenreDao;
 import com.dkovalov.movieland.dao.mapper.GenreRowMapper;
 import com.dkovalov.movieland.dao.mapper.MovieGenreRowMapper;
 import com.dkovalov.movieland.entity.Genre;
-import com.dkovalov.movieland.entity.MovieGenre;
+import com.dkovalov.movieland.dto.MovieGenre;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

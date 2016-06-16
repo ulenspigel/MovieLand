@@ -2,6 +2,7 @@ package com.dkovalov.movieland.controller;
 
 import com.dkovalov.movieland.deserializer.impl.RequestDeserializerImpl;
 import com.dkovalov.movieland.entity.Movie;
+import com.dkovalov.movieland.entity.Review;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.util.JsonDisplayScheme;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -62,5 +63,18 @@ public class MovieController {
         movieService.populateGenres(movies);
         log.info("List of {} movies is fetched. Elapsed time - {} ms", movies.size(), System.currentTimeMillis() - startTime);
         return movies;
+    }
+
+    @JsonView(JsonDisplayScheme.ReviewConcise.class)
+    @RequestMapping(value = "movie/review", method = RequestMethod.POST)
+    @ResponseBody
+    public Review addReview(@RequestBody String request) {
+        log.info("Received request for review adding");
+        long startTime = System.currentTimeMillis();
+        Review review = movieService.addReview(deserializer.addReviewRequest(request));
+        log.debug("Added entry is {}", review);
+        log.info("Review with ID {} was successfully added. Elapsed time - {} ms", review.getId(),
+                System.currentTimeMillis() - startTime);
+        return review;
     }
 }

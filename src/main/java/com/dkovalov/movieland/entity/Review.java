@@ -6,18 +6,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 
 public class Review {
-    @JsonIgnore
-    int id;
+    @JsonProperty("reviewId")
+    @JsonView(JsonDisplayScheme.ReviewConcise.class)
+    private int id;
 
-    @JsonIgnore
-    int movieId;
+    @JsonProperty("movieId")
+    private int movieId;
 
-    @JsonIgnore
-    int userId;
+    @JsonProperty("userId")
+    private int userId;
 
     @JsonProperty("review")
     @JsonView(JsonDisplayScheme.MovieFull.class)
-    String text;
+    private String text;
 
     public int getId() {
         return id;

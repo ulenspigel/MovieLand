@@ -3,8 +3,8 @@ package com.dkovalov.movieland.dto;
 import com.dkovalov.movieland.entity.Genre;
 
 public class MovieGenre {
-    int movieId;
-    Genre genre;
+    private int movieId;
+    private Genre genre;
 
     public int getMovieId() {
         return movieId;

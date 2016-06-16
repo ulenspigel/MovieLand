@@ -5,4 +5,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Incorrect format or fields set of JSON request")
 public class IncorrectJsonRequest extends RuntimeException {
+    public IncorrectJsonRequest() {
+        super();
+    }
+
+    public IncorrectJsonRequest(Throwable error) {
+        super(error);
+    }
 }
+

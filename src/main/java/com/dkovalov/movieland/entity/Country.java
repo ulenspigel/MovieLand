@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public class Country {
     @JsonIgnore
-    int id;
+    private int id;
 
     @JsonProperty("country")
     @JsonView(JsonDisplayScheme.MovieFull.class)
-    String name;
+    private String name;
 
     public int getId() {
         return id;

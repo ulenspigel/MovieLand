@@ -3,8 +3,10 @@ package com.dkovalov.movieland.service.impl;
 import com.dkovalov.movieland.cache.GenreCache;
 import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.dao.MovieDao;
+import com.dkovalov.movieland.dto.AuthorizedRequest;
 import com.dkovalov.movieland.dto.MovieRequest;
 import com.dkovalov.movieland.entity.Movie;
+import com.dkovalov.movieland.entity.Review;
 import com.dkovalov.movieland.service.CountryService;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.service.ReviewService;
@@ -83,5 +85,10 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void populateReviews(Movie movie) {
         movie.setReviews(reviewService.getForMovie(movie.getId()));
+    }
+
+    @Override
+    public Review addReview(AuthorizedRequest<Review> review) {
+        return reviewService.add(review);
     }
 }

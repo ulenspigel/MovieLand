@@ -86,9 +86,4 @@ public class MovieServiceImpl implements MovieService {
     public void populateReviews(Movie movie) {
         movie.setReviews(reviewService.getForMovie(movie.getId()));
     }
-
-    @Override
-    public Review addReview(AuthorizedRequest<Review> review) {
-        return reviewService.add(review);
-    }
 }

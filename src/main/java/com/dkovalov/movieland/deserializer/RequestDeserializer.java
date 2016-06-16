@@ -10,5 +10,5 @@ import java.io.IOException;
 public interface RequestDeserializer {
     MovieRequest searchRequest(String json);
     UserCredentials authorizationRequest(String json);
-    AuthorizedRequest<Review> addReviewRequest(String json);
+    AuthorizedRequest<Review> reviewManipulationRequest(String json);
 }

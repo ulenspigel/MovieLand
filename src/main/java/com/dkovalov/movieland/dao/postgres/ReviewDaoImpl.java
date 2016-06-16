@@ -31,7 +31,10 @@ public class ReviewDaoImpl implements ReviewDao {
     @Value("${sql.review.insert}")
     private String insertSQL;
 
-    @Value("${movie.review.limit}")
+    @Value("${sql.review.byId}")
+    private String fetchByIdSQL;
+
+    @Value("${movie.review.limit}:2")
     private int fetchLimit;
 
     @Override
@@ -62,5 +65,19 @@ public class ReviewDaoImpl implements ReviewDao {
         }, keyHolder);
         log.info("Review inserted. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
         return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public Review getById(int reviewId) {
+        log.info("Start querying reviews with ID = {}", reviewId);
+        long startTime = System.currentTimeMillis();
+        Review review = jdbcTemplate.queryForObject(fetchByIdSQL, new Object[] {reviewId}, new ReviewRowMapper());
+        log.info("Review {} queried. Elapsed time - {} ms", review.getId(), System.currentTimeMillis() - startTime);
+        return review;
+    }
+
+    @Override
+    public int delete(int reviewId) {
+        return 0;
     }
 }

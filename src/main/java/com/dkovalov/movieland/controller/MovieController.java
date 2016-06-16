@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,18 +64,5 @@ public class MovieController {
         movieService.populateGenres(movies);
         log.info("List of {} movies is fetched. Elapsed time - {} ms", movies.size(), System.currentTimeMillis() - startTime);
         return movies;
-    }
-
-    @JsonView(JsonDisplayScheme.ReviewConcise.class)
-    @RequestMapping(value = "movie/review", method = RequestMethod.POST)
-    @ResponseBody
-    public Review addReview(@RequestBody String request) {
-        log.info("Received request for review adding");
-        long startTime = System.currentTimeMillis();
-        Review review = movieService.addReview(deserializer.addReviewRequest(request));
-        log.debug("Added entry is {}", review);
-        log.info("Review with ID {} was successfully added. Elapsed time - {} ms", review.getId(),
-                System.currentTimeMillis() - startTime);
-        return review;
     }
 }

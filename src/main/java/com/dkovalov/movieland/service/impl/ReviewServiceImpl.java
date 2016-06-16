@@ -32,4 +32,9 @@ public class ReviewServiceImpl implements ReviewService {
         review.setId(reviewId);
         return review;
     }
+
+    @Override
+    public Review delete(AuthorizedRequest<Review> request) {
+        return null;
+    }
 }

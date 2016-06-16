@@ -7,4 +7,5 @@ import java.util.List;
 public interface ReviewService {
     List<Review> getForMovie(int movieId);
     Review add(AuthorizedRequest<Review> request);
+    Review delete(AuthorizedRequest<Review> request);
 }

@@ -15,5 +15,4 @@ public interface MovieService {
     void populateGenres(List<Movie> movies);
     void populateCountries(Movie movie);
     void populateReviews(Movie movie);
-    Review addReview(AuthorizedRequest<Review> review);
 }

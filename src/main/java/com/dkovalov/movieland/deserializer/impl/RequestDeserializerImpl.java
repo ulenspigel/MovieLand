@@ -53,7 +53,7 @@ public class RequestDeserializerImpl implements RequestDeserializer {
     }
 
     @Override
-    public AuthorizedRequest<Review> addReviewRequest(String json) {
+    public AuthorizedRequest<Review> reviewManipulationRequest(String json) {
         log.info("Start parsing request for adding review {}", json);
         long startTime = System.currentTimeMillis();
         AuthorizedRequest<Review> request = parseJsonWithToken(json, Review.class);

@@ -24,11 +24,11 @@ public class RequestDeserializerTest {
     @Test(expected = IncorrectJsonRequest.class)
     public void testAddReviewRequest() {
         String requestJSON = "{\"token\": 123, \"request\": {\"movieId\": 1, \"userId\": 10, \"review\": \"Test review\"}}";
-        AuthorizedRequest<Review> request = deserializer.addReviewRequest(requestJSON);
+        AuthorizedRequest<Review> request = deserializer.reviewManipulationRequest(requestJSON);
         assertEquals(request.getToken(), 123);
         assertEquals(request.getRequestEntity().getMovieId(), 1);
         assertEquals(request.getRequestEntity().getUserId(), 10);
         assertEquals(request.getRequestEntity().getText(), "Test review");
-        request = deserializer.addReviewRequest(requestJSON.replace("movieId", "movie_id"));
+        request = deserializer.reviewManipulationRequest(requestJSON.replace("movieId", "movie_id"));
     }
 }

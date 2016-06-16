@@ -1,5 +1,6 @@
 package com.dkovalov.movieland.controller;
 
+import com.dkovalov.movieland.deserializer.impl.RequestDeserializerImpl;
 import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.util.JsonDisplayScheme;
@@ -16,8 +17,12 @@ import java.util.List;
 @RequestMapping("/v1/")
 public class MovieController {
     private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
-    MovieService movieService;
+    private MovieService movieService;
+
+    @Autowired
+    private RequestDeserializerImpl deserializer;
 
     @JsonView(JsonDisplayScheme.MovieConcise.class)
     @RequestMapping(value = "movies", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
@@ -45,5 +50,17 @@ public class MovieController {
         movieService.populateReviews(movie);
         log.info("Movie with ID = {} is fetched. Elapsed time - {} ms", movieId, System.currentTimeMillis() - startTime);
         return movie;
+    }
+
+    @JsonView(JsonDisplayScheme.MovieConcise.class)
+    @RequestMapping(value = "movies/search", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public List<Movie> search(@RequestBody String request) {
+        log.info("Received request for movies search: {}", request);
+        long startTime = System.currentTimeMillis();
+        List<Movie> movies = movieService.search(deserializer.searchRequest(request));
+        movieService.populateGenres(movies);
+        log.info("List of {} movies is fetched. Elapsed time - {} ms", movies.size(), System.currentTimeMillis() - startTime);
+        return movies;
     }
 }

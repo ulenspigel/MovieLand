@@ -5,5 +5,6 @@ import com.dkovalov.movieland.entity.UserToken;
 
 public interface SecurityService {
     UserToken authenticateUser(UserCredentials credentials);
-    void checkTokenValidity();
+    void checkTokenValidity(int token);
+    void purgeExpiredTokens();
 }

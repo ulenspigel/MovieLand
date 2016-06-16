@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SecurityRequestDeserializerImpl extends AbstractRequestDeserializer implements SecurityRequestDeserializer {
-    //TODO: cover with tests
     @Override
     public UserCredentials authorizationRequest(String json) {
         UserCredentials credentials = parseJson(json, UserCredentials.class);

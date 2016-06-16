@@ -22,7 +22,7 @@ public class GenreCacheImpl implements GenreCache {
     @Autowired
     private GenreService genreService;
 
-    @Value("${cache.refresh.interval.hours}")
+    @Value("${cache.refreshInterval.hours}")
     private int cacheRefreshInterval;
 
     @Override

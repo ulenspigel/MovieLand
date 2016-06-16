@@ -2,10 +2,10 @@ package com.dkovalov.movieland.service.impl;
 
 import com.dkovalov.movieland.controller.error.IncorrectCredentials;
 import com.dkovalov.movieland.controller.error.InvalidToken;
-import com.dkovalov.movieland.dao.UserDao;
 import com.dkovalov.movieland.dto.UserCredentials;
 import com.dkovalov.movieland.entity.UserToken;
 import com.dkovalov.movieland.service.SecurityService;
+import com.dkovalov.movieland.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class SecurityServiceImpl implements SecurityService {
     private HashMap<Integer, UserToken> tokens = new HashMap<>();
 
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     @Value("${token.lifeTime.hours}")
     private int tokenLifetime;
@@ -32,11 +32,11 @@ public class SecurityServiceImpl implements SecurityService {
     public UserToken authenticateUser(UserCredentials credentials) {
         UserToken token;
         try {
-            int userId = userDao.getUserIdByCredentials(credentials.getLogin(), credentials.getPassword());
-            token = new UserToken(userId);
+            token = new UserToken(userService.getUserIdByCredentials(credentials));
             storeToken(token);
         } catch (EmptyResultDataAccessException e) {
-            throw new IncorrectCredentials();
+            log.error("User with given credentials was not found: {}", e);
+            throw new IncorrectCredentials(e);
         }
         return token;
     }
@@ -51,15 +51,18 @@ public class SecurityServiceImpl implements SecurityService {
             UserToken userToken = tokens.get(token);
             if (isTokenExpired(userToken.getGenerationTime())) {
                 tokens.remove(token);
+                log.error("Token {} has expired", token);
                 throw new InvalidToken();
             }
         } else {
+            log.error("Token {} was not found", token);
             throw new InvalidToken();
         }
     }
 
     @Override
     @Scheduled(fixedRate = 30_000_000)
+    // housekeeping job that launches every 30 minutes and purges expired tokens
     public synchronized void purgeExpiredTokens() {
         log.info("Start purging expired tokens");
         long startTime = System.currentTimeMillis();

@@ -1,7 +1,6 @@
 package com.dkovalov.movieland.controller;
 
-import com.dkovalov.movieland.deserializer.SecurityRequestDeserializer;
-import com.dkovalov.movieland.dto.UserCredentials;
+import com.dkovalov.movieland.deserializer.RequestDeserializer;
 import com.dkovalov.movieland.entity.UserToken;
 import com.dkovalov.movieland.service.SecurityService;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class AuthorizationController {
     private SecurityService securityService;
 
     @Autowired
-    private SecurityRequestDeserializer deserializer;
+    private RequestDeserializer deserializer;
 
     @RequestMapping(value = "authorize", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     @ResponseBody

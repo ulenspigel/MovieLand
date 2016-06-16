@@ -3,32 +3,41 @@ package com.dkovalov.movieland.service.impl;
 import com.dkovalov.movieland.cache.GenreCache;
 import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.dao.MovieDao;
-import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.dto.MovieRequest;
+import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.service.CountryService;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.service.ReviewService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
 @Service
 public class MovieServiceImpl implements MovieService {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private MovieDao movieDao;
+
     @Autowired
     private GenreCache genreCache;
+
     @Autowired
     private CountryService countryService;
+
     @Autowired
     private ReviewService reviewService;
 
     @Override
     public List<Movie> getAll(String ratingOrder, String priceOrder) {
         List<Movie> movies = movieDao.getAll(ratingOrder, priceOrder);
-        if (movies == null || movies.size() == 0) {
+        if (CollectionUtils.isEmpty(movies)) {
+            log.error("Movies list is empty");
             throw new ResourceNotFound();
         }
         return movies;
@@ -40,7 +49,8 @@ public class MovieServiceImpl implements MovieService {
         try {
             movie = movieDao.getById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFound();
+            log.error("Movie with ID {} was not found", id);
+            throw new ResourceNotFound(e);
         }
         return movie;
     }
@@ -48,7 +58,8 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> search(MovieRequest request) {
         List<Movie> movies = movieDao.search(request);
-        if (movies == null || movies.size() == 0) {
+        if (CollectionUtils.isEmpty(movies)) {
+            log.error("Movie with given search criteria was not found");
             throw new ResourceNotFound();
         }
         return movies;

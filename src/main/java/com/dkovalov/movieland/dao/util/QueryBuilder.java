@@ -32,39 +32,33 @@ public class QueryBuilder {
     private String countrySubRequest;
 
     public String getMoviesOrderClause(String ratingOrder, String priceOrder) {
-        String orderClause = "";
+        StringBuilder orderClause = new StringBuilder("");
         if (ratingOrder != null) {
             validateSortOrder(ratingOrder);
-            orderClause += RATING_COLUMN_NAME + ratingOrder;
+            orderClause.append(RATING_COLUMN_NAME + ratingOrder);
         }
         if (priceOrder != null) {
             validateSortOrder(priceOrder);
-            orderClause += PRICE_COLUMN_NAME + priceOrder;
+            orderClause.append(PRICE_COLUMN_NAME + priceOrder);
         }
-        if (!"".equals(orderClause)) {
-            orderClause = ORDER_BY_CLAUSE + orderClause.substring(1);
-        }
-        return orderClause;
+        return !"".equals(orderClause.toString()) ? ORDER_BY_CLAUSE + orderClause.substring(1) : "";
     }
 
     public String getMoviesFilterPredicate(MovieRequest request) {
-        String whereClause = "";
+        StringBuilder whereClause = new StringBuilder("");
         if (request.getTitle() != null) {
-            whereClause += TITLE_PREDICATE;
+            whereClause.append(TITLE_PREDICATE);
         }
         if (request.getYear() != null) {
-            whereClause += YEAR_PREDICATE;
+            whereClause.append(YEAR_PREDICATE);
         }
         if (request.getGenre() != null) {
-            whereClause += " and " + genreSubRequest;
+            whereClause.append(" and " + genreSubRequest);
         }
         if (request.getCountry() != null) {
-            whereClause += " and " + countrySubRequest;
+            whereClause.append(" and " + countrySubRequest);
         }
-        if (!"".equals(whereClause)) {
-            whereClause = whereClause.replaceFirst("(and)", WHERE_CLAUSE);
-        }
-        return whereClause;
+        return !"".equals(whereClause.toString()) ? whereClause.toString().replaceFirst("(and)", WHERE_CLAUSE) : "";
     }
 
     public Object[] getMoviesFilterParams(MovieRequest request) {

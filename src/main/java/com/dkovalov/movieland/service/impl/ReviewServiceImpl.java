@@ -17,6 +17,8 @@ import java.util.List;
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private static final String TOKEN_USER_MISMATCH_ERROR =
+            "Token doesn't correspond to user's identifier mentioned in request";
 
     @Autowired
     private ReviewDao reviewDao;
@@ -31,8 +33,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review add(AuthorizedRequest<Review> request) {
         if (!securityService.isUsersToken(request.getToken(), request.getRequestEntity().getUserId())) {
-            log.error("Token doesn't correspond to user's identifier mentioned in request");
-            throw new TokenUserIdMismatch();
+            log.error(TOKEN_USER_MISMATCH_ERROR);
+            throw new TokenUserIdMismatch(TOKEN_USER_MISMATCH_ERROR);
         }
         Review review = request.getRequestEntity();
         int reviewId = reviewDao.add(review);
@@ -50,8 +52,8 @@ public class ReviewServiceImpl implements ReviewService {
             throw new ResourceNotFound(e);
         }
         if (!securityService.isUsersToken(request.getToken(), review.getUserId())) {
-            log.error("Token doesn't correspond to user's identifier mentioned in request");
-            throw new TokenUserIdMismatch();
+            log.error(TOKEN_USER_MISMATCH_ERROR);
+            throw new TokenUserIdMismatch(TOKEN_USER_MISMATCH_ERROR);
         }
         return reviewDao.delete(request.getRequestEntity().getId());
     }

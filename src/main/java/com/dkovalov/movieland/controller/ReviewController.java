@@ -1,6 +1,6 @@
 package com.dkovalov.movieland.controller;
 
-import com.dkovalov.movieland.deserializer.impl.RequestDeserializerImpl;
+import com.dkovalov.movieland.deserializer.RequestDeserializer;
 import com.dkovalov.movieland.dto.AuthorizedRequest;
 import com.dkovalov.movieland.entity.Review;
 import com.dkovalov.movieland.service.ReviewService;
@@ -22,7 +22,7 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @Autowired
-    private RequestDeserializerImpl deserializer;
+    private RequestDeserializer deserializer;
 
     @JsonView(JsonDisplayScheme.ReviewConcise.class)
     @RequestMapping(method = RequestMethod.POST)

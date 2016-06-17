@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SecurityServiceImpl implements SecurityService {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private HashMap<Integer, UserToken> tokens = new HashMap<>();
+    private Map<Integer, UserToken> tokens = new ConcurrentHashMap<>();
 
     @Autowired
     private UserService userService;
@@ -33,7 +33,7 @@ public class SecurityServiceImpl implements SecurityService {
         UserToken token;
         try {
             token = new UserToken(userService.getUserIdByCredentials(credentials));
-            storeToken(token);
+            tokens.put(token.getToken(), token);
         } catch (EmptyResultDataAccessException e) {
             log.error("User with given credentials was not found: {}", e);
             throw new IncorrectCredentials(e);
@@ -41,12 +41,7 @@ public class SecurityServiceImpl implements SecurityService {
         return token;
     }
 
-    private synchronized void storeToken(UserToken token) {
-        tokens.put(token.hashCode(), token);
-    }
-
-    @Override
-    public synchronized void checkTokenValidity(int token) {
+    private UserToken findTokenValidate(int token) {
         if (tokens.containsKey(token)) {
             UserToken userToken = tokens.get(token);
             if (isTokenExpired(userToken.getGenerationTime())) {
@@ -54,6 +49,7 @@ public class SecurityServiceImpl implements SecurityService {
                 log.error("Token {} has expired", token);
                 throw new InvalidToken();
             }
+            return userToken;
         } else {
             log.error("Token {} was not found", token);
             throw new InvalidToken();
@@ -61,9 +57,24 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
+    public boolean checkTokenValidity(int token) {
+        return (findTokenValidate(token) != null);
+    }
+
+    @Override
+    public int getTokenUserId(int token) {
+        return findTokenValidate(token).getUserId();
+    }
+
+    @Override
+    public boolean isUsersToken(int token, int userId) {
+        return (findTokenValidate(token).getUserId() == userId);
+    }
+
+    @Override
     @Scheduled(fixedRate = 30_000_000)
     // housekeeping job that launches every 30 minutes and purges expired tokens
-    public synchronized void purgeExpiredTokens() {
+    public void purgeExpiredTokens() {
         log.info("Start purging expired tokens");
         long startTime = System.currentTimeMillis();
         int purgedItems = 0;

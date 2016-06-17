@@ -4,6 +4,7 @@ import com.dkovalov.movieland.controller.error.IncorrectJsonRequest;
 import com.dkovalov.movieland.deserializer.RequestDeserializer;
 import com.dkovalov.movieland.dto.MovieRequest;
 import com.dkovalov.movieland.dto.UserCredentials;
+import com.dkovalov.movieland.entity.Review;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ public class RequestDeserializerImpl implements RequestDeserializer {
         try {
             return mapper.readValue(json, clazz);
         } catch (IOException ioe) {
-            throw new IncorrectJsonRequest();
+            throw new IncorrectJsonRequest(ioe);
         }
     }
 
@@ -38,5 +39,15 @@ public class RequestDeserializerImpl implements RequestDeserializer {
     public UserCredentials authorizationRequest(String json) {
         UserCredentials credentials = parseJson(json, UserCredentials.class);
         return credentials;
+    }
+
+    @Override
+    public Review addReviewRequest(String json) {
+        log.info("Start parsing request for adding review {}", json);
+        long startTime = System.currentTimeMillis();
+        Review request = parseJson(json, Review.class);
+        log.debug("Deserialized object is {}", request);
+        log.info("Request has been parsed. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+        return request;
     }
 }

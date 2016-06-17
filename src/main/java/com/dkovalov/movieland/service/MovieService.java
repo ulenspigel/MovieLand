@@ -1,7 +1,9 @@
 package com.dkovalov.movieland.service;
 
+import com.dkovalov.movieland.dto.AuthorizedRequest;
 import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.dto.MovieRequest;
+import com.dkovalov.movieland.entity.Review;
 
 import java.util.List;
 

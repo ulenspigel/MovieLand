@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,7 @@ import java.util.List;
 @Repository
 public class ReviewDaoImpl implements ReviewDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private static RowMapper<Review> reviewMapper = new ReviewRowMapper();
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -34,14 +36,17 @@ public class ReviewDaoImpl implements ReviewDao {
     @Value("${sql.review.byId}")
     private String fetchByIdSQL;
 
-    @Value("${movie.review.limit}:2")
+    @Value("${sql.review.delete}")
+    private String reviewDeleteSQL;
+
+    @Value("${movie.review.limit:2}")
     private int fetchLimit;
 
     @Override
     public List<Review> getForMovie(int movieId) {
         log.info("Start querying reviews for movie with ID = {}", movieId);
         long startTime = System.currentTimeMillis();
-        List<Review> reviews = jdbcTemplate.query(fetchForMovieSQL, new Object[]{movieId, fetchLimit}, new ReviewRowMapper());
+        List<Review> reviews = jdbcTemplate.query(fetchForMovieSQL, new Object[]{movieId, fetchLimit}, reviewMapper);
         log.info("Finish querying reviews for movie with ID = {}. Elapsed time - {} ms", movieId,
                 System.currentTimeMillis() - startTime);
         return reviews;
@@ -52,7 +57,6 @@ public class ReviewDaoImpl implements ReviewDao {
         log.info("Start inserting review {}", review);
         long startTime = System.currentTimeMillis();
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        // TODO: replace with lambda
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
@@ -71,13 +75,17 @@ public class ReviewDaoImpl implements ReviewDao {
     public Review getById(int reviewId) {
         log.info("Start querying reviews with ID = {}", reviewId);
         long startTime = System.currentTimeMillis();
-        Review review = jdbcTemplate.queryForObject(fetchByIdSQL, new Object[] {reviewId}, new ReviewRowMapper());
+        Review review = jdbcTemplate.queryForObject(fetchByIdSQL, new Object[] {reviewId}, reviewMapper);
         log.info("Review {} queried. Elapsed time - {} ms", review.getId(), System.currentTimeMillis() - startTime);
         return review;
     }
 
     @Override
     public int delete(int reviewId) {
-        return 0;
+        log.info("Start deleting review with ID = {}", reviewId);
+        long startTime = System.currentTimeMillis();
+        int rowsAffected = jdbcTemplate.update(reviewDeleteSQL, new Object[] {reviewId});
+        log.info("{} rows have been deleted. Elapsed time - {} ms", rowsAffected, System.currentTimeMillis() - startTime);
+        return rowsAffected;
     }
 }

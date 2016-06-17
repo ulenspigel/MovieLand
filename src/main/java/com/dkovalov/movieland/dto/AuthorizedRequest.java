@@ -1,12 +1,13 @@
 package com.dkovalov.movieland.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class AuthorizedRequest<T> {
-    @JsonProperty("token")
     private int token;
-    @JsonProperty("request")
     private T requestEntity;
+
+    public AuthorizedRequest(int token, T requestEntity) {
+        this.token = token;
+        this.requestEntity = requestEntity;
+    }
 
     public int getToken() {
         return token;

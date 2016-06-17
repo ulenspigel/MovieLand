@@ -1,6 +1,7 @@
 package com.dkovalov.movieland.controller;
 
 import com.dkovalov.movieland.deserializer.impl.RequestDeserializerImpl;
+import com.dkovalov.movieland.dto.AuthorizedRequest;
 import com.dkovalov.movieland.entity.Review;
 import com.dkovalov.movieland.service.ReviewService;
 import com.dkovalov.movieland.util.JsonDisplayScheme;
@@ -26,23 +27,26 @@ public class ReviewController {
     @JsonView(JsonDisplayScheme.ReviewConcise.class)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public Review addReview(@RequestBody String request) {
+    public Review addReview(@RequestHeader("User-Token") int token, @RequestBody String request) {
         log.info("Received request for review adding");
         long startTime = System.currentTimeMillis();
-        Review review = reviewService.add(deserializer.reviewManipulationRequest(request));
+        AuthorizedRequest<Review> addRequest = new AuthorizedRequest<>(token, deserializer.addReviewRequest(request));
+        Review review = reviewService.add(addRequest);
         log.debug("Added entry is {}", review);
         log.info("Review with ID {} was successfully added. Elapsed time - {} ms", review.getId(),
                 System.currentTimeMillis() - startTime);
         return review;
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
+    @RequestMapping(value="/{reviewId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void deleteReview(@RequestBody String request) {
-        log.info("Received request for review deletion {}", request);
+    public void deleteReview(@RequestHeader("User-Token") int token, @PathVariable int reviewId) {
+        log.info("Received request for deleting a review with ID {}", reviewId);
         long startTime = System.currentTimeMillis();
-        Review deletedReview = reviewService.delete(deserializer.reviewManipulationRequest(request));
-        log.info("Review with ID {} was deleted. Elapsed time - {} ms", deletedReview.getId(),
-                System.currentTimeMillis() - startTime);
+        Review review = new Review();
+        review.setId(reviewId);
+        AuthorizedRequest<Review> deleteRequest = new AuthorizedRequest<>(token, review);
+        reviewService.delete(deleteRequest);
+        log.info("Review with ID {} was deleted. Elapsed time - {} ms", reviewId, System.currentTimeMillis() - startTime);
     }
 }

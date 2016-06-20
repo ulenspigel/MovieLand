@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,5 +63,17 @@ public class MovieController {
         movieService.populateGenres(movies);
         log.info("List of {} movies is fetched. Elapsed time - {} ms", movies.size(), System.currentTimeMillis() - startTime);
         return movies;
+    }
+
+    @RequestMapping(value = "movie", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void add(@RequestHeader("User-Token") int token, @RequestBody String request) {
+
+    }
+
+    @RequestMapping(value = "movie", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestHeader("User-Token") int token, @RequestBody String request) {
+        
     }
 }

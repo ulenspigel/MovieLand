@@ -1,6 +1,6 @@
 package com.dkovalov.movieland.dao.util;
 
-import com.dkovalov.movieland.dto.MovieRequest;
+import com.dkovalov.movieland.dto.MovieSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +44,7 @@ public class QueryBuilder {
         return !"".equals(orderClause.toString()) ? ORDER_BY_CLAUSE + orderClause.substring(1) : "";
     }
 
-    public String getMoviesFilterPredicate(MovieRequest request) {
+    public String getMoviesFilterPredicate(MovieSearchRequest request) {
         StringBuilder whereClause = new StringBuilder("");
         if (request.getTitle() != null) {
             whereClause.append(TITLE_PREDICATE);
@@ -61,7 +61,7 @@ public class QueryBuilder {
         return !"".equals(whereClause.toString()) ? whereClause.toString().replaceFirst("(and)", WHERE_CLAUSE) : "";
     }
 
-    public Object[] getMoviesFilterParams(MovieRequest request) {
+    public Object[] getMoviesFilterParams(MovieSearchRequest request) {
         List<Object> params = new ArrayList<>();
         if (request.getTitle() != null) {
             params.add(request.getTitle());

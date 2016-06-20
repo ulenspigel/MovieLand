@@ -7,7 +7,7 @@ import static com.dkovalov.movieland.util.JsonDisplayScheme.*;
 
 @JsonPropertyOrder({"title","originalTitle","yearOfRelease","countries","genres","description","reviews","rating"})
 public class Movie {
-    @JsonIgnore
+    @JsonProperty("id")
     private int id;
 
     @JsonProperty("title")
@@ -30,7 +30,7 @@ public class Movie {
     @JsonView(MovieConcise.class)
     private BigDecimal rating;
 
-    @JsonIgnore
+    @JsonProperty("price")
     private BigDecimal price;
 
     @JsonProperty("genres")

@@ -1,6 +1,6 @@
 package com.dkovalov.movieland.dao.util;
 
-import com.dkovalov.movieland.dto.MovieRequest;
+import com.dkovalov.movieland.dto.MovieSearchRequest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -23,7 +23,7 @@ public class QueryBuilderTest {
 
     @Test
     public void testGetMoviesFilterPredicate() {
-        MovieRequest request = new MovieRequest();
+        MovieSearchRequest request = new MovieSearchRequest();
         String expectedResult = "";
         assertEquals(queryBuilder.getMoviesFilterPredicate(request), expectedResult);
         request.setTitle("Test title");
@@ -36,7 +36,7 @@ public class QueryBuilderTest {
 
     @Test
     public void testGetMoviesFilterParams() {
-        MovieRequest request = new MovieRequest();
+        MovieSearchRequest request = new MovieSearchRequest();
         Object[] params = queryBuilder.getMoviesFilterParams(request);
         assertEquals(params.length, 0);
         request.setCountry("Test country");

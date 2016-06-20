@@ -2,6 +2,7 @@ package com.dkovalov.movieland.service.impl;
 
 import com.dkovalov.movieland.dao.UserDao;
 import com.dkovalov.movieland.dto.UserCredentials;
+import com.dkovalov.movieland.entity.User;
 import com.dkovalov.movieland.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public int getUserIdByCredentials(UserCredentials credentials) {
-        return userDao.getUserIdByCredentials(credentials.getLogin(), credentials.getPassword());
+    public User getUserByCredentials(UserCredentials credentials) {
+        return userDao.getUserByCredentials(credentials.getLogin(), credentials.getPassword());
     }
 }

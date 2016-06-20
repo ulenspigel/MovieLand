@@ -3,7 +3,7 @@ package com.dkovalov.movieland.service.impl;
 import com.dkovalov.movieland.cache.GenreCache;
 import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.dao.MovieDao;
-import com.dkovalov.movieland.dto.MovieRequest;
+import com.dkovalov.movieland.dto.MovieSearchRequest;
 import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.service.CountryService;
 import com.dkovalov.movieland.service.MovieService;
@@ -56,7 +56,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<Movie> search(MovieRequest request) {
+    public List<Movie> search(MovieSearchRequest request) {
         List<Movie> movies = movieDao.search(request);
         if (CollectionUtils.isEmpty(movies)) {
             log.error("Movie with given search criteria was not found");

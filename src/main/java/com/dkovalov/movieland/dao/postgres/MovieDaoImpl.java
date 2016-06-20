@@ -4,7 +4,7 @@ import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.dao.mapper.MovieRowMapper;
 import com.dkovalov.movieland.dao.util.QueryBuilder;
 import com.dkovalov.movieland.entity.Movie;
-import com.dkovalov.movieland.dto.MovieRequest;
+import com.dkovalov.movieland.dto.MovieSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class MovieDaoImpl implements MovieDao {
     }
 
     @Override
-    public List<Movie> search(MovieRequest request) {
+    public List<Movie> search(MovieSearchRequest request) {
         log.info("Start querying movies satisfying search request {}" + request);
         long startTime = System.currentTimeMillis();
         String query = fetchAllSQL + queryBuilder.getMoviesFilterPredicate(request);

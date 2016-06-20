@@ -9,4 +9,5 @@ public interface SecurityService {
     boolean checkTokenValidity(int token);
     int getTokenUserId(int token);
     boolean isUsersToken(int token, int userId);
+    boolean checkTokenAdminRights(int token);
 }

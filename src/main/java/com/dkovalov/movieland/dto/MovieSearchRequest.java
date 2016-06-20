@@ -1,6 +1,6 @@
 package com.dkovalov.movieland.dto;
 
-public class MovieRequest {
+public class MovieSearchRequest {
     private String genre;
     private String title;
     private Integer year;

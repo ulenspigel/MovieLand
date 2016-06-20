@@ -2,8 +2,9 @@ package com.dkovalov.movieland.deserializer.impl;
 
 import com.dkovalov.movieland.controller.error.IncorrectJsonRequest;
 import com.dkovalov.movieland.deserializer.RequestDeserializer;
-import com.dkovalov.movieland.dto.MovieRequest;
+import com.dkovalov.movieland.dto.MovieSearchRequest;
 import com.dkovalov.movieland.dto.UserCredentials;
+import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.entity.Review;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -26,10 +27,10 @@ public class RequestDeserializerImpl implements RequestDeserializer {
     }
 
     @Override
-    public MovieRequest searchRequest(String json) {
+    public MovieSearchRequest searchRequest(String json) {
         log.info("Start parsing movie search request {}", json);
         long startTime = System.currentTimeMillis();
-        MovieRequest request = parseJson(json, MovieRequest.class);
+        MovieSearchRequest request = parseJson(json, MovieSearchRequest.class);
         log.debug("Deserialized object is {}", request);
         log.info("Request has been parsed. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
         return request;
@@ -49,5 +50,15 @@ public class RequestDeserializerImpl implements RequestDeserializer {
         log.debug("Deserialized object is {}", request);
         log.info("Request has been parsed. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
         return request;
+    }
+
+    @Override
+    public Movie editMovieRequest(String json) {
+        log.info("Start parsing request for add/edit movie {}", json);
+        long startTime = System.currentTimeMillis();
+        Movie movie = parseJson(json, Movie.class);
+        log.debug("Deserialized object is {}", movie);
+        log.info("Request has been parsed. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+        return movie;
     }
 }

@@ -3,6 +3,7 @@ package com.dkovalov.movieland.service.impl;
 import com.dkovalov.movieland.controller.error.IncorrectCredentials;
 import com.dkovalov.movieland.controller.error.InvalidToken;
 import com.dkovalov.movieland.dto.UserCredentials;
+import com.dkovalov.movieland.entity.User;
 import com.dkovalov.movieland.entity.UserToken;
 import com.dkovalov.movieland.service.SecurityService;
 import com.dkovalov.movieland.service.UserService;
@@ -32,7 +33,8 @@ public class SecurityServiceImpl implements SecurityService {
     public UserToken authenticateUser(UserCredentials credentials) {
         UserToken token;
         try {
-            token = new UserToken(userService.getUserIdByCredentials(credentials));
+            User user = userService.getUserByCredentials(credentials);
+            token = new UserToken(user.getUserId(), user.isAdmin());
             tokens.put(token.getToken(), token);
         } catch (EmptyResultDataAccessException e) {
             log.error("User with given credentials was not found: {}", e);
@@ -58,7 +60,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public boolean checkTokenValidity(int token) {
-        return (findTokenValidate(token) != null);
+        return findTokenValidate(token) != null;
     }
 
     @Override
@@ -68,11 +70,16 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public boolean isUsersToken(int token, int userId) {
-        return (findTokenValidate(token).getUserId() == userId);
+        return findTokenValidate(token).getUserId() == userId;
     }
 
     @Override
-    @Scheduled(fixedRate = 30_000_000)
+    public boolean checkTokenAdminRights(int token) {
+        return findTokenValidate(token).isAdmin();
+    }
+
+    @Override
+    @Scheduled(fixedRate = 1_800_000)
     // housekeeping job that launches every 30 minutes and purges expired tokens
     public void purgeExpiredTokens() {
         log.info("Start purging expired tokens");

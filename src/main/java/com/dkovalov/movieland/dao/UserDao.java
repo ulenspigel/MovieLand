@@ -1,5 +1,7 @@
 package com.dkovalov.movieland.dao;
 
+import com.dkovalov.movieland.entity.User;
+
 public interface UserDao {
-    int getUserIdByCredentials(String login, String password);
+    User getUserByCredentials(String login, String password);
 }

@@ -12,8 +12,10 @@ public class UserToken {
     private LocalDateTime generationTime;
     @JsonProperty("token")
     private int token;
+    @JsonIgnore
+    private boolean isAdmin;
 
-    public UserToken(int userId) {
+    public UserToken(int userId, boolean isAdmin) {
         this.userId = userId;
         generationTime = LocalDateTime.now();
         token = (userId + generationTime.toString()).hashCode();
@@ -29,5 +31,9 @@ public class UserToken {
 
     public int getToken() {
         return token;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 }

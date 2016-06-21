@@ -1,11 +1,11 @@
 package com.dkovalov.movieland.dao.util;
 
 import com.dkovalov.movieland.dto.MovieSearchRequest;
+import com.dkovalov.movieland.entity.Movie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,10 +16,15 @@ public class QueryBuilder {
     private final Logger log = LoggerFactory.getLogger(QueryBuilder.class);
     private static final String ORDER_BY_CLAUSE = " order by ";
     private static final String WHERE_CLAUSE = "where";
-    private static final String RATING_COLUMN_NAME = ",rating ";
-    private static final String PRICE_COLUMN_NAME = ",price ";
-    private static final String TITLE_PREDICATE = " and movie_title = ?";
-    private static final String YEAR_PREDICATE = " and year = ?";
+    private static final String SET_CLAUSE_PLACEHOLDER = "#set_clause#";
+    private static final String TITLE_COLUMN = "movie_title";
+    private static final String ORIGINAL_TITLE_COLUMN = "original_title";
+    private static final String YEAR_COLUMN = "year";
+    private static final String DESCRIPTION_COLUMN = "description";
+    private static final String RATING_COLUMN = "rating";
+    private static final String PRICE_COLUMN = "price";
+    private static final String TITLE_PREDICATE = " and " + TITLE_COLUMN + " = ?";
+    private static final String YEAR_PREDICATE = " and " + YEAR_COLUMN + " = ?";
     private final Set<String> validOrders = new HashSet<String>() {{
         add("asc");
         add("desc");
@@ -31,15 +36,18 @@ public class QueryBuilder {
     @Value("${sql.movie.countrySubRequest}")
     private String countrySubRequest;
 
+    @Value("${sql.movie.update}")
+    private String movieUpdateSQL;
+
     public String getMoviesOrderClause(String ratingOrder, String priceOrder) {
         StringBuilder orderClause = new StringBuilder("");
         if (ratingOrder != null) {
             validateSortOrder(ratingOrder);
-            orderClause.append(RATING_COLUMN_NAME + ratingOrder);
+            orderClause.append(",").append(RATING_COLUMN).append(" ").append(ratingOrder);
         }
         if (priceOrder != null) {
             validateSortOrder(priceOrder);
-            orderClause.append(PRICE_COLUMN_NAME + priceOrder);
+            orderClause.append(",").append(PRICE_COLUMN).append(" ").append(priceOrder);
         }
         return !"".equals(orderClause.toString()) ? ORDER_BY_CLAUSE + orderClause.substring(1) : "";
     }
@@ -76,6 +84,33 @@ public class QueryBuilder {
             params.add(request.getCountry());
         }
         return params.toArray();
+    }
+
+    //TODO: Tests
+    public String getMovieUpdateStatement(Movie movie) {
+        StringBuilder statement = new StringBuilder();
+        if (movie.getTitle() != null) {
+            statement.append(", ").append(TITLE_COLUMN).append(" = ").append(movie.getTitle());
+        }
+        if (movie.getOriginalTitle() != null) {
+            statement.append(", ").append(ORIGINAL_TITLE_COLUMN).append(" = ").append(movie.getOriginalTitle());
+        }
+        if (movie.getYear() != 0) {
+            statement.append(", ").append(YEAR_COLUMN).append(" = ").append(movie.getYear());
+        }
+        if (movie.getDescription() != null) {
+            statement.append(", ").append(DESCRIPTION_COLUMN).append(" = ").append(movie.getDescription());
+        }
+        if (movie.getRating() != null) {
+            statement.append(", ").append(RATING_COLUMN).append(" = ").append(movie.getRating());
+        }
+        if (movie.getPrice() != null) {
+            statement.append(", ").append(PRICE_COLUMN).append(" = ").append(movie.getPrice());
+        }
+        if ("".equals(statement.toString())) {
+            throw new IllegalArgumentException("No fields were specified for update");
+        }
+        return movieUpdateSQL.replace(SET_CLAUSE_PLACEHOLDER, statement.toString().substring(1));
     }
 
     void validateSortOrder(String order) {

@@ -29,4 +29,9 @@ public class RequestDeserializerTest {
         assertEquals(request.getText(), "Test review");
         request = deserializer.addReviewRequest(requestJSON.replace("movieId", "movie_id"));
     }
+
+    @Test
+    public void testEditMovieRequest() {
+        // TODO
+    }
 }

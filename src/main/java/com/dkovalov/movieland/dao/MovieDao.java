@@ -8,4 +8,6 @@ public interface MovieDao {
     List<Movie> getAll(String ratingOrder, String priceOrder);
     List<Movie> search(MovieSearchRequest request);
     Movie getById(int id);
+    int add(Movie movie);
+    int update(Movie movie);
 }

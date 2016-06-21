@@ -1,6 +1,7 @@
 package com.dkovalov.movieland.service.impl;
 
 import com.dkovalov.movieland.cache.GenreCache;
+import com.dkovalov.movieland.controller.error.AdminPrivilegesRequired;
 import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.dto.MovieSearchRequest;
@@ -8,6 +9,7 @@ import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.service.CountryService;
 import com.dkovalov.movieland.service.MovieService;
 import com.dkovalov.movieland.service.ReviewService;
+import com.dkovalov.movieland.service.SecurityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @Override
     public List<Movie> getAll(String ratingOrder, String priceOrder) {
@@ -83,5 +88,26 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void populateReviews(Movie movie) {
         movie.setReviews(reviewService.getForMovie(movie.getId()));
+    }
+
+    @Override
+    public Movie add(int token, Movie movie) {
+        validateAdminPrivileges(token);
+        int movieId = movieDao.add(movie);
+        movie.setId(movieId);
+        return movie;
+    }
+
+    @Override
+    public int update(int token, Movie movie) {
+        validateAdminPrivileges(token);
+        return movieDao.update(movie);
+    }
+
+    private void validateAdminPrivileges(int token) {
+        if (!securityService.checkTokenAdminRights(token)) {
+            log.error("This operation requires administrator privileges");
+            throw new AdminPrivilegesRequired();
+        }
     }
 }

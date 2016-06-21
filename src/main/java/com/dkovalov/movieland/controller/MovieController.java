@@ -68,12 +68,20 @@ public class MovieController {
     @RequestMapping(value = "movie", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void add(@RequestHeader("User-Token") int token, @RequestBody String request) {
-
+        log.info("Received request for adding a movie: {}", request);
+        long startTime = System.currentTimeMillis();
+        Movie movie = deserializer.editMovieRequest(request);
+        movie = movieService.add(token, movie);
+        log.info("Movie with ID {} has been added. Elapsed time - {} ms", movie.getId(), System.currentTimeMillis() - startTime);
     }
 
     @RequestMapping(value = "movie", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void update(@RequestHeader("User-Token") int token, @RequestBody String request) {
-        
+        log.info("Received request for editing a movie: {}", request);
+        long startTime = System.currentTimeMillis();
+        Movie movie = deserializer.editMovieRequest(request);
+        movieService.update(token, movie);
+        log.info("Movie has been updated. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
     }
 }

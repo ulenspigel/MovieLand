@@ -10,8 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -30,6 +36,9 @@ public class MovieDaoImpl implements MovieDao {
 
     @Value("${sql.movie.byId}")
     private String fetchByIdSQL;
+
+    @Value("${sql.movie.insert}")
+    private String movieInsertSQL;
 
     @Override
     public List<Movie> getAll(String ratingOrder, String priceOrder) {
@@ -60,7 +69,41 @@ public class MovieDaoImpl implements MovieDao {
         Object[] params = queryBuilder.getMoviesFilterParams(request);
         log.debug("Using query {} with params {}", query, params);
         List<Movie> movies = jdbcTemplate.query(query, params, movieRowMapper);
-        log.info("Finis querying movies. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+        log.info("Finish querying movies. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
         return movies;
+    }
+
+    @Override
+    public int add(Movie movie) {
+        log.info("Start inserting movie {}", movie);
+        long startTime = System.currentTimeMillis();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement statement = connection.prepareStatement(movieInsertSQL, new String[] {"movie_id"});
+                statement.setString(1, movie.getTitle());
+                statement.setString(2, movie.getOriginalTitle());
+                statement.setInt(3, movie.getYear());
+                statement.setString(4, movie.getDescription());
+                statement.setBigDecimal(5, movie.getRating());
+                statement.setBigDecimal(6, movie.getPrice());
+                return statement;
+            }
+        }, keyHolder);
+        int movieId = keyHolder.getKey().intValue();
+        log.info("Finish inserting movie. Generated ID is {}. Elapsed time - {} ms", movieId,
+                System.currentTimeMillis() - startTime);
+        return movieId;
+    }
+
+    @Override
+    public int update(Movie movie) {
+        log.info("Start updating movie with new values {}", movie);
+        long startTime = System.currentTimeMillis();
+        int rowsUpdated = jdbcTemplate.update(queryBuilder.getMovieUpdateStatement(movie), new Object[] {movie.getId()});
+        log.info("Finish updating movie. Affected {} row(s). Elapsed time - {} ms", rowsUpdated,
+                System.currentTimeMillis() - startTime);
+        return rowsUpdated;
     }
 }

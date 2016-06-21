@@ -2,7 +2,6 @@ package com.dkovalov.movieland.service;
 
 import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.dto.MovieSearchRequest;
-
 import java.util.List;
 
 public interface MovieService {
@@ -13,4 +12,6 @@ public interface MovieService {
     void populateGenres(List<Movie> movies);
     void populateCountries(Movie movie);
     void populateReviews(Movie movie);
+    Movie add(int token, Movie movie);
+    int update(int token, Movie movie);
 }

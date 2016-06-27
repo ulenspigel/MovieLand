@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface CountryService {
     List<Country> getForMovie(int movieId);
+    void addForMovie(int movieId, List<Country> countries);
 }

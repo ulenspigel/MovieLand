@@ -10,13 +10,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
 public class GenreDaoImpl implements GenreDao {
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private static RowMapper<Genre> rowMapper = new GenreRowMapper();
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -26,6 +34,15 @@ public class GenreDaoImpl implements GenreDao {
 
     @Value("${sql.genre.allMovies}")
     private String fetchForAllMoviesSQL;
+
+    @Value("${sql.genre.byName}")
+    private String fetchByNameSQL;
+
+    @Value("${sql.genre.add}")
+    private String addGenreSQL;
+
+    @Value("${sql.movie.addGenre}")
+    private String addMovieGenreSQL;
 
     @Override
     public List<Genre> getForMovie(int movieId) {
@@ -44,5 +61,40 @@ public class GenreDaoImpl implements GenreDao {
         List<MovieGenre> movieGenres = jdbcTemplate.query(fetchForAllMoviesSQL, new MovieGenreRowMapper());
         log.info("Finish querying genres for movies. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
         return movieGenres;
+    }
+
+    @Override
+    public int getIdByName(String name) {
+        log.info("Start searching genre by its name {}", name);
+        long startTime = System.currentTimeMillis();
+        Genre genre = jdbcTemplate.queryForObject(fetchByNameSQL, new Object[] {name}, rowMapper);
+        log.debug("Fetched genre is {}", genre);
+        log.info("Finish searching genre. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+        return genre.getId();
+    }
+
+    @Override
+    public int add(String name) {
+        log.info("Start adding genre with name {}", name);
+        long startTime = System.currentTimeMillis();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement statement = connection.prepareStatement(addGenreSQL, new String[] {"genre_id"});
+                statement.setString(1, name);
+                return statement;
+            }
+        }, keyHolder);
+        log.info("Finish adding genre. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+        return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public void addForMovie(int movieId, int genreId) {
+        log.info("Start adding genre with ID={} for movie with ID={}", genreId, movieId);
+        long startTime = System.currentTimeMillis();
+        jdbcTemplate.update(addMovieGenreSQL, new Object[] {movieId, genreId});
+        log.info("Row has been inserted. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
     }
 }

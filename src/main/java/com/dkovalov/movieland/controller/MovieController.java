@@ -80,8 +80,7 @@ public class MovieController {
     public void update(@RequestHeader("User-Token") int token, @RequestBody String request) {
         log.info("Received request for editing a movie: {}", request);
         long startTime = System.currentTimeMillis();
-        Movie movie = deserializer.editMovieRequest(request);
-        movieService.update(token, movie);
+        movieService.update(token, deserializer.editMovieRequest(request));
         log.info("Movie has been updated. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
     }
 }

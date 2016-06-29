@@ -44,6 +44,9 @@ public class GenreDaoImpl implements GenreDao {
     @Value("${sql.movie.addGenre}")
     private String addMovieGenreSQL;
 
+    @Value("${sql.movie.deleteGenres}")
+    private String deleteMovieGenresSQL;
+
     @Override
     public List<Genre> getForMovie(int movieId) {
         log.info("Start querying genres for movie with ID = {}", movieId);
@@ -96,5 +99,13 @@ public class GenreDaoImpl implements GenreDao {
         long startTime = System.currentTimeMillis();
         jdbcTemplate.update(addMovieGenreSQL, new Object[] {movieId, genreId});
         log.info("Row has been inserted. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    @Override
+    public void deleteForMovie(int movieId) {
+        log.info("Start deleting genres for a movie with ID={}", movieId);
+        long startTime = System.currentTimeMillis();
+        int rowsDeleted = jdbcTemplate.update(deleteMovieGenresSQL, new Object[] {movieId});
+        log.info("{} rows have been deleted. Elapsed time - {} ms", rowsDeleted, System.currentTimeMillis() - startTime);
     }
 }

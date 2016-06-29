@@ -31,6 +31,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void addForMovie(int movieId, List<Genre> genres) {
+        // TODO: invalidate cache
         for (Genre genre : genres) {
             int genreId;
             try {
@@ -41,5 +42,11 @@ public class GenreServiceImpl implements GenreService {
             }
             genreDao.addForMovie(movieId, genreId);
         }
+    }
+
+    @Override
+    public void deleteForMovie(int movieId) {
+        // TODO: invalidate cache
+        genreDao.deleteForMovie(movieId);
     }
 }

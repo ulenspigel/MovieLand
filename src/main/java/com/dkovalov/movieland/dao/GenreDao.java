@@ -11,4 +11,5 @@ public interface GenreDao {
     int getIdByName(String name);
     int add(String name);
     void addForMovie(int movieId, int genreId);
+    void deleteForMovie(int movieId);
 }

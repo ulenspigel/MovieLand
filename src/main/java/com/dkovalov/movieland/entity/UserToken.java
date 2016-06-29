@@ -17,6 +17,7 @@ public class UserToken {
 
     public UserToken(int userId, boolean isAdmin) {
         this.userId = userId;
+        this.isAdmin = isAdmin;
         generationTime = LocalDateTime.now();
         token = (userId + generationTime.toString()).hashCode();
     }

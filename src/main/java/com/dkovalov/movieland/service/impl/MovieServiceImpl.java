@@ -6,15 +6,13 @@ import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.dto.MovieSearchRequest;
 import com.dkovalov.movieland.entity.Movie;
-import com.dkovalov.movieland.service.CountryService;
-import com.dkovalov.movieland.service.MovieService;
-import com.dkovalov.movieland.service.ReviewService;
-import com.dkovalov.movieland.service.SecurityService;
+import com.dkovalov.movieland.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -34,6 +32,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private GenreService genreService;
 
     @Autowired
     private SecurityService securityService;
@@ -91,17 +92,30 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional
     public Movie add(int token, Movie movie) {
         validateAdminPrivileges(token);
         int movieId = movieDao.add(movie);
         movie.setId(movieId);
+        genreService.addForMovie(movieId, movie.getGenres());
+        countryService.addForMovie(movieId, movie.getCountries());
         return movie;
     }
 
     @Override
-    public int update(int token, Movie movie) {
+    @Transactional
+    public void update(int token, Movie movie) {
         validateAdminPrivileges(token);
-        return movieDao.update(movie);
+        movieDao.update(movie);
+        // TODO: Null-pointer
+        if (movie.getGenres().size() > 0) {
+            genreService.deleteForMovie(movie.getId());
+            genreService.addForMovie(movie.getId(), movie.getGenres());
+        }
+        if (movie.getCountries().size() > 0) {
+            countryService.deleteForMovie(movie.getId());
+            countryService.addForMovie(movie.getId(), movie.getCountries());
+        }
     }
 
     private void validateAdminPrivileges(int token) {

@@ -8,4 +8,5 @@ public interface CountryDao {
     int getIdByName(String name);
     int add(String name);
     void addForMovie(int movieId, int countryId);
+    void deleteForMovie(int movieId);
 }

@@ -39,6 +39,9 @@ public class CountryDaoImpl implements CountryDao {
     @Value("${sql.movie.addCountry}")
     private String addMovieCountrySQL;
 
+    @Value("${sql.movie.deleteCountries}")
+    private String deleteMovieCountriesSQL;
+
     @Override
     public List<Country> getForMovie(int movieId) {
         log.info("Start querying countries for movie with ID = {}", movieId);
@@ -82,5 +85,13 @@ public class CountryDaoImpl implements CountryDao {
         long startTime = System.currentTimeMillis();
         jdbcTemplate.update(addMovieCountrySQL, new Object[] {movieId, countryId});
         log.info("Row has been inserted. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    @Override
+    public void deleteForMovie(int movieId) {
+        log.info("Start deleting countries for a movie with ID={}", movieId);
+        long startTime = System.currentTimeMillis();
+        int rowsDeleted = jdbcTemplate.update(deleteMovieCountriesSQL, new Object[] {movieId});
+        log.info("{} rows have been deleted. Elapsed time - {} ms", rowsDeleted, System.currentTimeMillis() - startTime);
     }
 }

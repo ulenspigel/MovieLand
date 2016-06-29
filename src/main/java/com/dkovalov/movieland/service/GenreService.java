@@ -8,4 +8,5 @@ public interface GenreService {
     List<Genre> getForMovie(int movieId);
     List<MovieGenre> getForAllMovies();
     void addForMovie(int movieId, List<Genre> genres);
+    void deleteForMovie(int movieId);
 }

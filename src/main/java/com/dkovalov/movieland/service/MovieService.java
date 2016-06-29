@@ -13,5 +13,5 @@ public interface MovieService {
     void populateCountries(Movie movie);
     void populateReviews(Movie movie);
     Movie add(int token, Movie movie);
-    int update(int token, Movie movie);
+    void update(int token, Movie movie);
 }

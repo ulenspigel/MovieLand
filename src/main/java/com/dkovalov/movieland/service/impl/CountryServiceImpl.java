@@ -35,4 +35,9 @@ public class CountryServiceImpl implements CountryService {
             countryDao.addForMovie(movieId, countryId);
         }
     }
+
+    @Override
+    public void deleteForMovie(int movieId) {
+        countryDao.deleteForMovie(movieId);
+    }
 }

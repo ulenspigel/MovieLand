@@ -101,9 +101,15 @@ public class MovieDaoImpl implements MovieDao {
     public int update(Movie movie) {
         log.info("Start updating movie with new values {}", movie);
         long startTime = System.currentTimeMillis();
-        int rowsUpdated = jdbcTemplate.update(queryBuilder.getMovieUpdateStatement(movie), new Object[] {movie.getId()});
-        log.info("Finish updating movie. Affected {} row(s). Elapsed time - {} ms", rowsUpdated,
-                System.currentTimeMillis() - startTime);
+        String updateQuery = queryBuilder.getMovieUpdateStatement(movie);
+        int rowsUpdated = 0;
+        if (updateQuery != null) {
+            rowsUpdated = jdbcTemplate.update(updateQuery, new Object[]{movie.getId()});
+            log.info("Finish updating movie. Affected {} row(s). Elapsed time - {} ms", rowsUpdated,
+                    System.currentTimeMillis() - startTime);
+        } else {
+            log.info("Nothing to update in T_MOVIE table: no columns have been changed");
+        }
         return rowsUpdated;
     }
 }

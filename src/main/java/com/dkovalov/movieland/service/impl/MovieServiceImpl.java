@@ -5,6 +5,8 @@ import com.dkovalov.movieland.controller.error.AdminPrivilegesRequired;
 import com.dkovalov.movieland.controller.error.ResourceNotFound;
 import com.dkovalov.movieland.dao.MovieDao;
 import com.dkovalov.movieland.dto.MovieSearchRequest;
+import com.dkovalov.movieland.entity.Country;
+import com.dkovalov.movieland.entity.Genre;
 import com.dkovalov.movieland.entity.Movie;
 import com.dkovalov.movieland.service.*;
 import org.slf4j.Logger;
@@ -107,14 +109,15 @@ public class MovieServiceImpl implements MovieService {
     public void update(int token, Movie movie) {
         validateAdminPrivileges(token);
         movieDao.update(movie);
-        // TODO: Null-pointer
-        if (movie.getGenres().size() > 0) {
+        List<Genre> genres = movie.getGenres();
+        if (genres != null && genres.size() > 0) {
             genreService.deleteForMovie(movie.getId());
-            genreService.addForMovie(movie.getId(), movie.getGenres());
+            genreService.addForMovie(movie.getId(), genres);
         }
-        if (movie.getCountries().size() > 0) {
+        List<Country> countries = movie.getCountries();
+        if (countries != null && countries.size() > 0) {
             countryService.deleteForMovie(movie.getId());
-            countryService.addForMovie(movie.getId(), movie.getCountries());
+            countryService.addForMovie(movie.getId(), countries);
         }
     }
 

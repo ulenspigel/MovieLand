@@ -9,7 +9,7 @@ public class UserToken {
     @JsonIgnore
     private int userId;
     @JsonIgnore
-    private LocalDateTime generationTime;
+    private LocalDateTime generationTime; // TODO: store expiration time
     @JsonProperty("token")
     private int token;
     @JsonIgnore

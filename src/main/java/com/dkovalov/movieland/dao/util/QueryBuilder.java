@@ -90,16 +90,16 @@ public class QueryBuilder {
     public String getMovieUpdateStatement(Movie movie) {
         StringBuilder statement = new StringBuilder();
         if (movie.getTitle() != null) {
-            statement.append(", ").append(TITLE_COLUMN).append(" = ").append(movie.getTitle());
+            statement.append(", ").append(TITLE_COLUMN).append(" = '").append(movie.getTitle()).append("'");
         }
         if (movie.getOriginalTitle() != null) {
-            statement.append(", ").append(ORIGINAL_TITLE_COLUMN).append(" = ").append(movie.getOriginalTitle());
+            statement.append(", ").append(ORIGINAL_TITLE_COLUMN).append(" = '").append(movie.getOriginalTitle()).append("'");
         }
         if (movie.getYear() != 0) {
             statement.append(", ").append(YEAR_COLUMN).append(" = ").append(movie.getYear());
         }
         if (movie.getDescription() != null) {
-            statement.append(", ").append(DESCRIPTION_COLUMN).append(" = ").append(movie.getDescription());
+            statement.append(", ").append(DESCRIPTION_COLUMN).append(" = '").append(movie.getDescription()).append("'");
         }
         if (movie.getRating() != null) {
             statement.append(", ").append(RATING_COLUMN).append(" = ").append(movie.getRating());
@@ -107,10 +107,11 @@ public class QueryBuilder {
         if (movie.getPrice() != null) {
             statement.append(", ").append(PRICE_COLUMN).append(" = ").append(movie.getPrice());
         }
-        if ("".equals(statement.toString())) {
-            throw new IllegalArgumentException("No fields were specified for update");
+        if (statement.length() == 0) {
+            return null;
+        } else {
+            return movieUpdateSQL.replace(SET_CLAUSE_PLACEHOLDER, statement.toString().substring(1));
         }
-        return movieUpdateSQL.replace(SET_CLAUSE_PLACEHOLDER, statement.toString().substring(1));
     }
 
     void validateSortOrder(String order) {

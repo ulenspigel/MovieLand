@@ -65,14 +65,16 @@ public class MovieController {
         return movies;
     }
 
+    @JsonView(JsonDisplayScheme.MovieId.class)
     @RequestMapping(value = "movie", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
-    public void add(@RequestHeader("User-Token") int token, @RequestBody String request) {
+    @ResponseBody
+    public Movie add(@RequestHeader("User-Token") int token, @RequestBody String request) {
         log.info("Received request for adding a movie: {}", request);
         long startTime = System.currentTimeMillis();
         Movie movie = deserializer.editMovieRequest(request);
         movie = movieService.add(token, movie);
         log.info("Movie with ID {} has been added. Elapsed time - {} ms", movie.getId(), System.currentTimeMillis() - startTime);
+        return movie;
     }
 
     @RequestMapping(value = "movie", method = RequestMethod.PUT)

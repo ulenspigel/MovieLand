@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class GenreCacheImpl implements GenreCache {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private LocalDateTime lastRefreshed = null; // by default is initialized with current time
+    private LocalDateTime lastRefreshed;
     private List<MovieGenre> movieGenres;
 
     @Autowired
@@ -24,6 +24,8 @@ public class GenreCacheImpl implements GenreCache {
 
     @Value("${cache.refreshInterval.hours}")
     private int cacheRefreshInterval;
+
+    //TODO: populate on startup
 
     @Override
     public List<Genre> getForMovie(int movieId) {

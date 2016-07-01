@@ -8,6 +8,7 @@ import static com.dkovalov.movieland.util.JsonDisplayScheme.*;
 @JsonPropertyOrder({"title","originalTitle","yearOfRelease","countries","genres","description","reviews","rating"})
 public class Movie {
     @JsonProperty("id")
+    @JsonView(MovieId.class)
     private int id;
 
     @JsonProperty("title")

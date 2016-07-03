@@ -51,7 +51,6 @@ public class RequestDeserializerImpl implements RequestDeserializer {
         return request;
     }
 
-    //TODO: Tests
     @Override
     public Movie editMovieRequest(String json) {
         log.info("Start parsing request for add/edit movie {}", json);

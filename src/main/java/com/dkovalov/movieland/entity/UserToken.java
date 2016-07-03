@@ -9,25 +9,25 @@ public class UserToken {
     @JsonIgnore
     private int userId;
     @JsonIgnore
-    private LocalDateTime generationTime; // TODO: store expiration time
+    private LocalDateTime expirationTime;
     @JsonProperty("token")
     private int token;
     @JsonIgnore
     private boolean isAdmin;
 
-    public UserToken(int userId, boolean isAdmin) {
+    public UserToken(int userId, boolean isAdmin, int lifetimeSeconds) {
         this.userId = userId;
         this.isAdmin = isAdmin;
-        generationTime = LocalDateTime.now();
-        token = (userId + generationTime.toString()).hashCode();
+        expirationTime = LocalDateTime.now().plusSeconds(lifetimeSeconds);
+        token = (userId + expirationTime.toString()).hashCode();
     }
 
     public int getUserId() {
         return userId;
     }
 
-    public LocalDateTime getGenerationTime() {
-        return generationTime;
+    public LocalDateTime getExpirationTime() {
+        return expirationTime;
     }
 
     public int getToken() {
@@ -36,5 +36,9 @@ public class UserToken {
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(expirationTime);
     }
 }

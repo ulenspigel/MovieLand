@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -34,7 +35,7 @@ public class SecurityServiceImpl implements SecurityService {
         UserToken token;
         try {
             User user = userService.getUserByCredentials(credentials);
-            token = new UserToken(user.getUserId(), user.isAdmin());
+            token = new UserToken(user.getUserId(), user.isAdmin(), tokenLifetime * 60 * 60);
             tokens.put(token.getToken(), token);
         } catch (EmptyResultDataAccessException e) {
             log.error("User with given credentials was not found: {}", e);
@@ -46,7 +47,7 @@ public class SecurityServiceImpl implements SecurityService {
     private UserToken findTokenValidate(int token) {
         if (tokens.containsKey(token)) {
             UserToken userToken = tokens.get(token);
-            if (isTokenExpired(userToken.getGenerationTime())) {
+            if (userToken.isExpired()) {
                 tokens.remove(token);
                 log.error("Token {} has expired", token);
                 throw new InvalidToken();
@@ -82,20 +83,17 @@ public class SecurityServiceImpl implements SecurityService {
     @Scheduled(fixedRate = 1_800_000)
     // housekeeping job that launches every 30 minutes and purges expired tokens
     public void purgeExpiredTokens() {
-        log.info("Start purging expired tokens");
+        log.info("Start purging expired tokens from the set of {} tokens", tokens.size());
         long startTime = System.currentTimeMillis();
-        int purgedItems = 0;
-        for (int token : tokens.keySet()) {
-            if (isTokenExpired(tokens.get(token).getGenerationTime())) {
-                tokens.remove(token);
-                purgedItems++;
+        Set<Integer> expiredTokens = new HashSet<>();
+        tokens.forEach((k, v) -> {
+            if (v.isExpired()) {
+                expiredTokens.add(k);
             }
-        }
-        log.info("Purging completed. {} items have been purged. Elapsed time - {} ms", purgedItems,
+        });
+        log.debug("{} tokens have been expired", expiredTokens.size());
+        tokens.keySet().removeAll(expiredTokens);
+        log.info("Purging completed. {} tokens are currently valid. Elapsed time - {} ms", tokens.size(),
                 System.currentTimeMillis() - startTime);
-    }
-
-    private boolean isTokenExpired(LocalDateTime generationTime) {
-        return LocalDateTime.now().isAfter(generationTime.plusHours(tokenLifetime));
     }
 }

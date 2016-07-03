@@ -1,6 +1,7 @@
 package com.dkovalov.movieland.dao.util;
 
 import com.dkovalov.movieland.dto.MovieSearchRequest;
+import com.dkovalov.movieland.entity.Movie;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -86,7 +86,6 @@ public class QueryBuilder {
         return params.toArray();
     }
 
-    //TODO: Tests
     public String getMovieUpdateStatement(Movie movie) {
         StringBuilder statement = new StringBuilder();
         if (movie.getTitle() != null) {

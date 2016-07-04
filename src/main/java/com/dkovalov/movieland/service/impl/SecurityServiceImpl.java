@@ -27,7 +27,7 @@ public class SecurityServiceImpl implements SecurityService {
     @Autowired
     private UserService userService;
 
-    @Value("${token.lifeTime.hours}")
+    @Value("${token.housekeeping.lifeTimeHours:2}")
     private int tokenLifetime;
 
     @Override
@@ -80,7 +80,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    @Scheduled(fixedRate = 1_800_000)
+    @Scheduled(fixedRateString = "${token.housekeeping.launchInterval:1800000}")
     // housekeeping job that launches every 30 minutes and purges expired tokens
     public void purgeExpiredTokens() {
         log.info("Start purging expired tokens from the set of {} tokens", tokens.size());

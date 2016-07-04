@@ -1,8 +1,9 @@
 package com.dkovalov.movieland.service.impl;
 
+import com.dkovalov.movieland.cache.GenreCache;
 import com.dkovalov.movieland.dao.GenreDao;
-import com.dkovalov.movieland.entity.Genre;
 import com.dkovalov.movieland.dto.MovieGenre;
+import com.dkovalov.movieland.entity.Genre;
 import com.dkovalov.movieland.service.GenreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,9 @@ public class GenreServiceImpl implements GenreService {
     @Autowired
     private GenreDao genreDao;
 
+    @Autowired
+    private GenreCache genreCache;
+
     @Override
     public List<Genre> getForMovie(int movieId) {
         return genreDao.getForMovie(movieId);
@@ -31,7 +35,6 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void addForMovie(int movieId, List<Genre> genres) {
-        // TODO: invalidate cache
         for (Genre genre : genres) {
             int genreId;
             try {
@@ -42,11 +45,12 @@ public class GenreServiceImpl implements GenreService {
             }
             genreDao.addForMovie(movieId, genreId);
         }
+        genreCache.refreshForMovie(movieId);
     }
 
     @Override
     public void deleteForMovie(int movieId) {
-        // TODO: invalidate cache
         genreDao.deleteForMovie(movieId);
+        genreCache.refreshForMovie(movieId);
     }
 }

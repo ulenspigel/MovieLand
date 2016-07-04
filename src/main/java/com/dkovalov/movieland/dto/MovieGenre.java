@@ -6,6 +6,14 @@ public class MovieGenre {
     private int movieId;
     private Genre genre;
 
+    public MovieGenre(int movieId, Genre genre) {
+        this.movieId = movieId;
+        this.genre = genre;
+    }
+
+    public MovieGenre() {
+    }
+
     public int getMovieId() {
         return movieId;
     }

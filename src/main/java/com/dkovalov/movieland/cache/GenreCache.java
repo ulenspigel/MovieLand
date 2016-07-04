@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface GenreCache {
     List<Genre> getForMovie(int movieId);
+    void refresh();
+    void refreshForMovie(int movieId);
 }

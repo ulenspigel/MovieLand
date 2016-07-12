@@ -10,4 +10,6 @@ public interface MovieDao {
     Movie getById(int id);
     int add(Movie movie);
     int update(Movie movie);
+    void addToDeleteQueue(int id);
+    int removeFromDeleteQueue(int id);
 }

@@ -40,6 +40,12 @@ public class MovieDaoImpl implements MovieDao {
     @Value("${sql.movie.insert}")
     private String movieInsertSQL;
 
+    @Value("${sql.movie.deleteQueue.add}")
+    private String addToDeletionQueueSQL;
+
+    @Value("${sql.movie.deleteQueue.remove}")
+    private String removeFromDeletionQueueSQL;
+
     @Override
     public List<Movie> getAll(String ratingOrder, String priceOrder) {
         log.info("Start querying movies");
@@ -111,5 +117,22 @@ public class MovieDaoImpl implements MovieDao {
             log.info("Nothing to update in T_MOVIE table: no columns have been changed");
         }
         return rowsUpdated;
+    }
+
+    @Override
+    public void addToDeleteQueue(int id) {
+        log.info("Start marking a movie with ID {} as pending for deletion", id);
+        long startTime = System.currentTimeMillis();
+        jdbcTemplate.update(addToDeletionQueueSQL, new Object[] {id});
+        log.info("Finish marking movie. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    @Override
+    public int removeFromDeleteQueue(int id) {
+        log.info("Start removing a movie with ID {} from the deletion queue", id);
+        long startTime = System.currentTimeMillis();
+        int rowsDeleted = jdbcTemplate.update(removeFromDeletionQueueSQL, new Object[] {id});
+        log.info("Finish removing a movie. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+        return rowsDeleted;
     }
 }

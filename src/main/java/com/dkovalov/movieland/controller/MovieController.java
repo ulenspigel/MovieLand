@@ -85,4 +85,22 @@ public class MovieController {
         movieService.update(token, deserializer.editMovieRequest(request));
         log.info("Movie has been updated. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
     }
+
+    @RequestMapping(value = "movie/{movieId}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void markForDeletion(@RequestHeader("User-Token") int token, @PathVariable int movieId) {
+        log.info("Received request for marking a movie with ID {} as pending for deletion", movieId);
+        long startTime = System.currentTimeMillis();
+        movieService.markForDeletion(token, movieId);
+        log.info("Movie has been marked. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+    }
+
+    @RequestMapping(value = "movie/{movieId}/unmark", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void unmarkForDeletion(@RequestHeader("User-Token") int token, @PathVariable int movieId) {
+        log.info("Received request for removing a movie with ID {} from the deletion queue", movieId);
+        long startTime = System.currentTimeMillis();
+        movieService.unmarkForDeletion(token, movieId);
+        log.info("Movie has been removed from the deletion queue. Elapsed time - {} ms", System.currentTimeMillis() - startTime);
+    }
 }

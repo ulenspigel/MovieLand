@@ -127,4 +127,21 @@ public class MovieServiceImpl implements MovieService {
             throw new AdminPrivilegesRequired();
         }
     }
+
+    @Override
+    public void markForDeletion(int token, int id) {
+        validateAdminPrivileges(token);
+        movieDao.addToDeleteQueue(id);
+    }
+
+    @Override
+    public int unmarkForDeletion(int token, int id) {
+        validateAdminPrivileges(token);
+        return movieDao.removeFromDeleteQueue(id);
+    }
+
+    @Override
+    public void deleteMarkedMovies() {
+
+    }
 }

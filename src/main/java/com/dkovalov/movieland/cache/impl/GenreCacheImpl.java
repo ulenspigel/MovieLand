@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +52,11 @@ public class GenreCacheImpl implements GenreCache {
             movieGenres.addAll(actualData);
         }
         log.info("New cache size is {}", movieGenres.size());
+    }
+
+    @PostConstruct
+    public void init() {
+        refresh();
     }
 
     @Override

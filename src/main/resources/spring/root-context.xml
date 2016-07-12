@@ -15,7 +15,7 @@
     <context:property-placeholder location="classpath:properties/*"/>
 
     <task:annotation-driven executor="movieLandTaskExecutor" scheduler="movieLandTaskScheduler" />
-    <task:executor id="movieLandTaskExecutor" pool-size="1-5" />
+    <task:executor id="movieLandTaskExecutor" pool-size="1-5" queue-capacity="10"/>
     <task:scheduler id="movieLandTaskScheduler" pool-size="5" />
 
     <context:component-scan base-package="com.dkovalov.movieland">

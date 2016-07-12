@@ -14,4 +14,7 @@ public interface MovieService {
     void populateReviews(Movie movie);
     Movie add(int token, Movie movie);
     void update(int token, Movie movie);
+    void markForDeletion(int token, int id);
+    int unmarkForDeletion(int token, int id);
+    void deleteMarkedMovies();
 }
